@@ -1,0 +1,532 @@
+// @ts-nocheck
+'use client';
+
+import React, { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Navbar from '../../../components/Navbar';
+import Footer from '../../../components/Footer';
+import { useStore } from '../../../store/useStore';
+import { 
+  ShoppingBag, 
+  Heart, 
+  Star, 
+  Truck, 
+  ShieldCheck, 
+  RotateCcw, 
+  ArrowLeft,
+  ChevronRight,
+  Info,
+  Smartphone,
+  Box
+} from 'lucide-react';
+import Link from 'next/link';
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default function ProductDetails({ params }: PageProps) {
+  const router = useRouter();
+  
+  // Unwrapping params Promise
+  const resolvedParams = React.use(params);
+  const id = resolvedParams.id;
+
+  const { 
+    products, 
+    reviews, 
+    cart, 
+    wishlist, 
+    toggleWishlist, 
+    addToCart, 
+    addReview,
+    currentUser
+  } = useStore();
+
+  // Find active product
+  const product = useMemo(() => {
+    return products.find(p => p.id === id);
+  }, [products, id]);
+
+  const [activeImage, setActiveImage] = useState('');
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+  
+  // Ref for hidden model-viewer to trigger AR directly
+  const arViewerRef = React.useRef<HTMLElement>(null);
+  
+  // Review form states
+  const [userRating, setUserRating] = useState(5);
+  const [userComment, setUserComment] = useState('');
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
+  // Sync state when product loads
+  useEffect(() => {
+    if (product) {
+      setActiveImage(product.images[0]);
+      
+      // Default first variants
+      const defaults: Record<string, string> = {};
+      Object.entries(product.variants).forEach(([key, values]) => {
+        defaults[key] = values[0];
+      });
+      setSelectedVariants(defaults);
+    }
+  }, [product]);
+
+
+
+  // Calculations
+  const productReviews = useMemo(() => {
+    return reviews.filter(r => r.product_id === id);
+  }, [reviews, id]);
+
+  const relatedProducts = useMemo(() => {
+    if (!product) return [];
+    return products
+      .filter(p => p.category === product.category && p.id !== product.id)
+      .slice(0, 3);
+  }, [products, product]);
+
+  const deliveryDateEstimate = useMemo(() => {
+    const today = new Date();
+    // 3 days shipping estimate
+    const estimate = new Date(today.setDate(today.getDate() + 3));
+    return estimate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+  }, []);
+
+  // Product-specific 3D Model Mapper
+  const getModelUrl = (productId: string) => {
+    if (!product) return 'https://modelviewer.dev/shared-assets/models/Astronaut.glb';
+
+    // 1. If the vendor uploaded their own 3D model, ALWAYS use it!
+    if ((product as any).model_url) {
+      return (product as any).model_url;
+    }
+
+    // 2. Otherwise, fall back to our semantic placeholders for demonstration
+    const semanticString = `${product.title} ${product.category} ${product.description}`.toLowerCase();
+
+    if (semanticString.includes('shirt') || semanticString.includes('clothing') || semanticString.includes('apparel')) {
+      return 'https://raw.githubusercontent.com/adrianhajdin/project_threejs_ai/main/client/public/shirt_baked.glb';
+    }
+    if (semanticString.includes('shoe') || semanticString.includes('sneaker') || semanticString.includes('footwear')) {
+      return 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb';
+    }
+    if (semanticString.includes('chair') || semanticString.includes('furniture') || semanticString.includes('sofa')) {
+      return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/SheenChair/glTF-Binary/SheenChair.glb';
+    }
+    if (semanticString.includes('car') || semanticString.includes('vehicle') || semanticString.includes('auto')) {
+      return 'https://modelviewer.dev/shared-assets/models/ToyCar.glb';
+    }
+    if (semanticString.includes('helmet') || semanticString.includes('head') || semanticString.includes('gear')) {
+      return 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/FlightHelmet/glTF-Binary/FlightHelmet.glb';
+    }
+    if (semanticString.includes('camera') || semanticString.includes('photo')) {
+      return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/AntiqueCamera/glTF-Binary/AntiqueCamera.glb';
+    }
+    if (semanticString.includes('audio') || semanticString.includes('speaker') || semanticString.includes('sound')) {
+      return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/BoomBox/glTF-Binary/BoomBox.glb';
+    }
+
+    // Default Fallback
+    return 'https://modelviewer.dev/shared-assets/models/Astronaut.glb';
+  };
+
+  // No Javascript intents needed - we will use a native overlay
+
+  if (!product) {
+    return (
+      <>
+        <Navbar />
+        <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
+          <h2 className="text-xl font-bold text-theme-text">Artifact not found</h2>
+          <p className="text-xs text-theme-muted mt-2">The requested ID does not match our digital ledger.</p>
+          <Link href="/products" className="rounded-xl bg-brand text-white px-5 py-2.5 text-xs font-semibold mt-4">
+            Return to Catalog
+          </Link>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  const isWishlisted = wishlist.includes(product.id);
+  const isOut = product.inventory === 0;
+
+  const handleVariantSelect = (key: string, value: string) => {
+    setSelectedVariants(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentUser) return;
+    
+    addReview(product.id, userRating, userComment);
+    setUserComment('');
+    setReviewSubmitted(true);
+    setTimeout(() => setReviewSubmitted(false), 3000);
+  };
+
+  const handleAddToCart = () => {
+    const variantString = Object.entries(selectedVariants)
+      .map(([k, v]) => `${k}: ${v}`)
+      .join(', ');
+    
+    addToCart(product.id, 1, variantString || undefined);
+  };
+
+  const handleBuyNow = () => {
+    handleAddToCart();
+    router.push('/cart');
+  };
+
+  return (
+    <>
+      <Navbar />
+
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        
+        {/* Back Button */}
+        <button
+          onClick={() => router.back()}
+          className="flex items-center space-x-2 text-xs font-semibold text-theme-muted hover:text-brand mb-8 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to products</span>
+        </button>
+
+        {/* Product Spec Presentation Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+          
+          {/* Gallery Box */}
+          <div className="space-y-4">
+            <div className="relative h-[300px] sm:h-[450px] rounded-3xl overflow-hidden border border-theme-border bg-black/20 group">
+              
+              <img
+                src={activeImage || product.images[0]}
+                alt={product.title}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              />
+              <span className="absolute top-4 left-4 bg-brand text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-full glow-effect">
+                {product.category}
+              </span>
+              
+              {/* Visual Button (Custom UI) */}
+              <div 
+                className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md border border-white/20 text-white px-3 py-2 rounded-xl flex items-center gap-2 transition-all hover:bg-black/60 hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] z-20 group overflow-hidden pointer-events-none"
+              >
+                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
+                <div className="p-1.5 bg-brand rounded-lg shadow shadow-brand/50 relative z-10">
+                  <Smartphone className="h-3.5 w-3.5 text-white" />
+                </div>
+                <span className="text-[10px] font-bold tracking-wider uppercase drop-shadow-md relative z-10">
+                  View in Room
+                </span>
+              </div>
+
+              {/* Invisible Native model-viewer overlaying the button to capture clicks */}
+              <div className="absolute bottom-4 left-4 w-[125px] h-[40px] z-30 opacity-0 overflow-hidden cursor-pointer">
+                <model-viewer
+                  ref={arViewerRef}
+                  src={getModelUrl(product.id)}
+                  ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+                  ar
+                  ar-modes="webxr scene-viewer quick-look"
+                  camera-controls
+                  touch-action="pan-y"
+                  shadow-intensity="1"
+                  style={{ width: '100%', height: '100%' }}
+                >
+                  <button slot="ar-button" className="w-full h-full border-none bg-transparent cursor-pointer" />
+                </model-viewer>
+              </div>
+
+            </div>
+
+            {/* Thumbnail Selectors */}
+            {product.images.length > 1 && (
+              <div className="flex space-x-3 overflow-x-auto py-1">
+                {product.images.map((img, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setActiveImage(img)}
+                    className={`h-20 w-20 shrink-0 rounded-2xl overflow-hidden border transition-all ${
+                      activeImage === img ? 'border-brand glow-effect scale-95' : 'border-theme-border opacity-70 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={img} alt="thumbnail" className="h-full w-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Details & Specs Box */}
+          <div className="space-y-6">
+            
+            {/* Title / Studio details */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs text-theme-muted">
+                <span>Studio: <strong className="text-brand">{product.seller_name}</strong></span>
+                <div className="flex items-center text-amber-500">
+                  <Star className="h-3.5 w-3.5 fill-current mr-0.5" />
+                  <span className="font-semibold">{product.average_rating}</span>
+                  <span className="text-theme-muted ml-2">({productReviews.length} verified reviews)</span>
+                </div>
+              </div>
+
+              <h1 className="font-display text-3xl font-extrabold text-theme-text sm:text-4xl">
+                {product.title}
+              </h1>
+
+              <div className="flex items-baseline space-x-3 pt-2">
+                <span className="text-2xl font-extrabold text-brand">${product.price}</span>
+                {product.compare_at_price && (
+                  <span className="text-sm text-theme-muted line-through">${product.compare_at_price}</span>
+                )}
+              </div>
+            </div>
+
+            <p className="text-sm text-theme-muted leading-relaxed">
+              {product.description}
+            </p>
+
+            {/* Variant Selectors */}
+            {Object.keys(product.variants).length > 0 && (
+              <div className="space-y-4 pt-4 border-t border-theme-border/50">
+                {Object.entries(product.variants).map(([vKey, vValues]) => (
+                  <div key={vKey} className="space-y-2">
+                    <label className="text-xs font-semibold text-theme-text uppercase tracking-wider">{vKey}</label>
+                    <div className="flex items-center space-x-2">
+                      {vValues.map((val) => {
+                        const isSelected = selectedVariants[vKey] === val;
+                        return (
+                          <button
+                            key={val}
+                            onClick={() => handleVariantSelect(vKey, val)}
+                            className={`rounded-xl border text-xs px-4 py-2 font-medium transition-all ${
+                              isSelected
+                                ? 'border-brand bg-brand/10 text-brand font-semibold shadow-md'
+                                : 'border-theme-border text-theme-muted hover:border-theme-muted'
+                            }`}
+                          >
+                            {val}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Logistics & Inventory Stats */}
+            <div className="grid grid-cols-2 gap-4 py-4 border-t border-theme-border/50 text-xs">
+              <div className="flex items-start space-x-2.5 text-theme-muted">
+                <Truck className="h-4 w-4 text-brand shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-semibold text-theme-text block">Insured Delivery</span>
+                  <span>Estimated by <strong className="text-brand">{deliveryDateEstimate}</strong></span>
+                </div>
+              </div>
+              <div className="flex items-start space-x-2.5 text-theme-muted">
+                <Info className="h-4 w-4 text-brand shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-semibold text-theme-text block">Ledger Status</span>
+                  <span>
+                    {isOut 
+                      ? <span className="text-red-400">Sold out</span> 
+                      : <span>Only <strong className="text-brand">{product.inventory}</strong> items left</span>
+                    }
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Checkout & Action triggers */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button
+                onClick={handleAddToCart}
+                disabled={isOut}
+                className={`flex-1 inline-flex items-center justify-center space-x-2 rounded-2xl py-3.5 text-sm font-bold transition-all ${
+                  isOut
+                    ? 'bg-theme-card/10 border border-theme-border text-theme-muted cursor-not-allowed'
+                    : 'border border-brand text-brand hover:bg-brand/5 shadow-lg shadow-brand/5'
+                }`}
+              >
+                <ShoppingBag className="h-4 w-4" />
+                <span>Add to Bag</span>
+              </button>
+
+              <button
+                onClick={handleBuyNow}
+                disabled={isOut}
+                className={`flex-1 inline-flex items-center justify-center space-x-2 rounded-2xl py-3.5 text-sm font-bold transition-all ${
+                  isOut
+                    ? 'bg-theme-card/10 text-theme-muted cursor-not-allowed'
+                    : 'bg-brand hover:bg-brand-hover text-white shadow-xl shadow-brand/10'
+                }`}
+              >
+                <span>Buy Now</span>
+              </button>
+
+              <button
+                onClick={() => toggleWishlist(product.id)}
+                className={`p-3.5 rounded-2xl border transition-colors ${
+                  isWishlisted ? 'bg-brand/10 border-brand text-brand' : 'border-theme-border text-theme-muted hover:text-theme-text'
+                }`}
+              >
+                <Heart className={`h-4.5 w-4.5 ${isWishlisted ? 'fill-current' : ''}`} />
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Technical Specification details */}
+        <section className="mb-16 border-t border-theme-border/50 pt-12">
+          <h2 className="font-display text-xl font-bold text-theme-text mb-6">Technical Specifications</h2>
+          <div className="glass-panel rounded-3xl overflow-hidden border border-theme-border">
+            <table className="w-full text-xs text-left border-collapse">
+              <tbody>
+                {Object.entries(product.specs).map(([specKey, specVal], index) => (
+                  <tr key={index} className="border-b border-theme-border/40 hover:bg-white/5 transition-colors">
+                    <td className="w-1/3 p-4 font-bold uppercase tracking-wider text-theme-muted border-r border-theme-border/30">{specKey}</td>
+                    <td className="p-4 text-theme-text">{specVal}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* User reviews list and review posting portal */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-12 border-t border-theme-border/50 pt-12 mb-16">
+          
+          {/* Reviews Summary */}
+          <div className="space-y-6">
+            <h2 className="font-display text-xl font-bold text-theme-text">Concierge Feedback Ledger</h2>
+            
+            <div className="glass-panel rounded-3xl p-6 border border-theme-border text-center space-y-4">
+              <div className="text-4xl font-extrabold text-brand">{product.average_rating}</div>
+              <div className="flex justify-center text-amber-500">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star 
+                    key={s} 
+                    className={`h-4 w-4 ${s <= Math.round(product.average_rating) ? 'fill-current' : 'text-theme-muted'}`} 
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-theme-muted">Based on {productReviews.length} designer audits</p>
+            </div>
+
+            {/* Post Review Form */}
+            {currentUser && (
+              <form onSubmit={handleReviewSubmit} className="glass-panel rounded-3xl p-6 border border-theme-border space-y-4">
+                <h3 className="text-sm font-bold text-theme-text">Submit Concierge Audit</h3>
+                
+                <div className="space-y-2">
+                  <span className="text-[10px] uppercase font-bold text-theme-muted block">Rating</span>
+                  <div className="flex space-x-1.5 text-amber-500">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        type="button"
+                        key={star}
+                        onClick={() => setUserRating(star)}
+                        className="p-0.5 hover:scale-110 transition-transform"
+                      >
+                        <Star className={`h-5 w-5 ${star <= userRating ? 'fill-current' : 'text-theme-muted'}`} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase font-bold text-theme-muted block">Comments</label>
+                  <textarea
+                    rows={3}
+                    required
+                    placeholder="Audit quality review details..."
+                    value={userComment}
+                    onChange={(e) => setUserComment(e.target.value)}
+                    className="w-full rounded-xl border border-theme-border bg-theme-bg-from/50 p-3 text-xs outline-none focus:border-brand"
+                  />
+                </div>
+
+                {reviewSubmitted && (
+                  <div className="text-[10px] text-green-400 font-semibold">
+                    Review logged and added to average score updates.
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="w-full rounded-xl bg-brand text-white py-2 text-xs font-semibold hover:bg-brand-hover transition-colors"
+                >
+                  Submit Audit
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* Reviews List */}
+          <div className="lg:col-span-2 space-y-4">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-theme-muted mb-4">Audit entries</h3>
+            {productReviews.length > 0 ? (
+              productReviews.map((rev) => (
+                <div key={rev.id} className="glass-panel rounded-3xl p-5 border border-theme-border space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-xs font-bold text-theme-text">{rev.user_name}</h4>
+                      <span className="text-[9px] text-theme-muted">{new Date(rev.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex text-amber-500">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star key={s} className={`h-3 w-3 ${s <= rev.rating ? 'fill-current' : 'text-theme-muted'}`} />
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-xs text-theme-muted leading-relaxed">
+                    {rev.comment}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="text-xs text-theme-muted py-6 text-center">
+                No designer reviews logged yet. Be the first to audit!
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Related Artifacts Carousel */}
+        {relatedProducts.length > 0 && (
+          <section className="border-t border-theme-border/50 pt-12">
+            <h2 className="font-display text-xl font-bold text-theme-text mb-6">Similar Artifacts</h2>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {relatedProducts.map((prod) => (
+                <div 
+                  key={prod.id} 
+                  className="glass-panel rounded-3xl p-4 border border-theme-border flex flex-col h-full hover:border-brand/20 transition-all cursor-pointer"
+                  onClick={() => {
+                    router.push(`/products/${prod.id}`);
+                  }}
+                >
+                  <div className="h-40 rounded-xl overflow-hidden mb-3 bg-black/20">
+                    <img src={prod.images[0]} alt={prod.title} className="h-full w-full object-cover" />
+                  </div>
+                  <h4 className="text-xs font-bold text-theme-text line-clamp-1">{prod.title}</h4>
+                  <span className="text-xs font-bold text-brand block mt-1">${prod.price}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+      </main>
+
+      <Footer />
+    </>
+  );
+}
