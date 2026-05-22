@@ -53,6 +53,31 @@ export default function ProductDetails({ params }: PageProps) {
   
   // Ref for hidden model-viewer to trigger AR directly
   const arViewerRef = React.useRef<HTMLElement>(null);
+  const [arToast, setArToast] = React.useState<string | null>(null);
+
+  const handleViewInRoom = async () => {
+    // Wait for model-viewer custom element to be defined (critical on production)
+    if (typeof customElements !== 'undefined') {
+      await customElements.whenDefined('model-viewer').catch(() => {});
+    }
+    const viewer = arViewerRef.current as any;
+    if (!viewer) {
+      setArToast('3D viewer not ready. Please wait a moment and try again.');
+      setTimeout(() => setArToast(null), 3500);
+      return;
+    }
+    if (typeof viewer.activateAR === 'function') {
+      try {
+        viewer.activateAR();
+      } catch {
+        setArToast('AR not supported on this device. Open on a mobile phone to view in your room.');
+        setTimeout(() => setArToast(null), 4000);
+      }
+    } else {
+      setArToast('AR not supported on this browser. Try Chrome on Android or Safari on iOS.');
+      setTimeout(() => setArToast(null), 4000);
+    }
+  };
   
   // Review form states
   const [userRating, setUserRating] = useState(5);
@@ -211,9 +236,17 @@ export default function ProductDetails({ params }: PageProps) {
                 {product.category}
               </span>
               
-              {/* Visual Button (Custom UI) */}
-              <div 
-                className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md border border-white/20 text-white px-3 py-2 rounded-xl flex items-center gap-2 transition-all hover:bg-black/60 hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] z-20 group overflow-hidden pointer-events-none"
+              {/* AR toast */}
+              {arToast && (
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-xs z-40 bg-gray-900/95 border border-cyan-500/50 text-white text-[10px] font-mono py-2 px-3 rounded-xl shadow-lg backdrop-blur-md text-center">
+                  {arToast}
+                </div>
+              )}
+
+              {/* Visual Button */}
+              <button
+                onClick={handleViewInRoom}
+                className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md border border-white/20 text-white px-3 py-2 rounded-xl flex items-center gap-2 transition-all hover:bg-black/60 hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] z-30 group overflow-hidden"
               >
                 <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
                 <div className="p-1.5 bg-brand rounded-lg shadow shadow-brand/50 relative z-10">
@@ -222,10 +255,10 @@ export default function ProductDetails({ params }: PageProps) {
                 <span className="text-[10px] font-bold tracking-wider uppercase drop-shadow-md relative z-10">
                   View in Room
                 </span>
-              </div>
+              </button>
 
-              {/* Invisible Native model-viewer overlaying the button to capture clicks */}
-              <div className="absolute bottom-4 left-4 w-[125px] h-[40px] z-30 opacity-0 overflow-hidden cursor-pointer">
+              {/* Hidden model-viewer for AR activation */}
+              <div className="absolute bottom-0 left-0 w-0 h-0 overflow-hidden" aria-hidden="true">
                 <model-viewer
                   ref={arViewerRef}
                   src={getModelUrl(product.id)}
@@ -233,12 +266,8 @@ export default function ProductDetails({ params }: PageProps) {
                   ar
                   ar-modes="webxr scene-viewer quick-look"
                   camera-controls
-                  touch-action="pan-y"
-                  shadow-intensity="1"
-                  style={{ width: '100%', height: '100%' }}
-                >
-                  <button slot="ar-button" className="w-full h-full border-none bg-transparent cursor-pointer" />
-                </model-viewer>
+                  style={{ width: '1px', height: '1px' }}
+                />
               </div>
 
             </div>

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from 'next/script';
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import ThemeWrapper from "../components/ThemeWrapper";
@@ -56,13 +57,17 @@ export default function RootLayout({
       className={`${inter.variable} ${poppins.variable} h-full antialiased dark`}
       style={{ colorScheme: "dark" }}
     >
-      <head>
-        <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js" async></script>
-      </head>
+      <head />
       <body className="min-h-full flex flex-col bg-theme-bg-from text-theme-text transition-colors duration-500">
         <ThemeWrapper>
           {children}
         </ThemeWrapper>
+        {/* model-viewer web component — must load via Next.js Script for production */}
+        <Script
+          type="module"
+          src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
