@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import Script from 'next/script';
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import ThemeWrapper from "../components/ThemeWrapper";
+import ModelViewerLoader from "../components/ModelViewerLoader";
 
 const inter = Inter({
-  variable: "--font-geist-sans", // map it to the tailwind default variable
+  variable: "--font-geist-sans",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
@@ -57,17 +57,12 @@ export default function RootLayout({
       className={`${inter.variable} ${poppins.variable} h-full antialiased dark`}
       style={{ colorScheme: "dark" }}
     >
-      <head />
       <body className="min-h-full flex flex-col bg-theme-bg-from text-theme-text transition-colors duration-500">
+        {/* Registers <model-viewer> custom element on the client */}
+        <ModelViewerLoader />
         <ThemeWrapper>
           {children}
         </ThemeWrapper>
-        {/* model-viewer web component — must load via Next.js Script for production */}
-        <Script
-          type="module"
-          src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );

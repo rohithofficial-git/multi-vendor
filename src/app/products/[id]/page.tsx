@@ -257,18 +257,24 @@ export default function ProductDetails({ params }: PageProps) {
                 </span>
               </button>
 
-              {/* Hidden model-viewer for AR activation */}
-              <div className="absolute bottom-0 left-0 w-0 h-0 overflow-hidden" aria-hidden="true">
-                <model-viewer
-                  ref={arViewerRef}
-                  src={getModelUrl(product.id)}
-                  ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
-                  ar
-                  ar-modes="webxr scene-viewer quick-look"
-                  camera-controls
-                  style={{ width: '1px', height: '1px' }}
-                />
-              </div>
+              {/* Hidden model-viewer for AR activation — must be non-zero size to initialize */}
+              <model-viewer
+                ref={arViewerRef}
+                src={getModelUrl(product.id)}
+                ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+                ar
+                ar-modes="webxr scene-viewer quick-look"
+                camera-controls
+                aria-hidden="true"
+                style={{
+                  position: 'fixed',
+                  top: '-9999px',
+                  left: '-9999px',
+                  width: '1px',
+                  height: '1px',
+                  pointerEvents: 'none',
+                }}
+              />
 
             </div>
 
