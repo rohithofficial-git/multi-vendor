@@ -51,30 +51,31 @@ export default function ProductDetails({ params }: PageProps) {
   const [activeImage, setActiveImage] = useState('');
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
   
-  // Ref for hidden model-viewer to trigger AR directly
-  const arViewerRef = React.useRef<HTMLElement>(null);
   const [arToast, setArToast] = React.useState<string | null>(null);
 
-  const handleViewInRoom = async () => {
-    // Wait for model-viewer custom element to be defined (critical on production)
-    if (typeof customElements !== 'undefined') {
-      await customElements.whenDefined('model-viewer').catch(() => {});
-    }
-    const viewer = arViewerRef.current as any;
-    if (!viewer) {
-      setArToast('3D viewer not ready. Please wait a moment and try again.');
-      setTimeout(() => setArToast(null), 3500);
-      return;
-    }
-    if (typeof viewer.activateAR === 'function') {
-      try {
-        viewer.activateAR();
-      } catch {
-        setArToast('AR not supported on this device. Open on a mobile phone to view in your room.');
-        setTimeout(() => setArToast(null), 4000);
-      }
+  const getNativeARLink = () => {
+    if (typeof window === 'undefined') return '#';
+    const glbUrl = getModelUrl(product.id);
+    const usdzUrl = "https://modelviewer.dev/shared-assets/models/Astronaut.usdz";
+    const ua = navigator.userAgent;
+    const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    
+    if (isIOS) {
+      return usdzUrl;
     } else {
-      setArToast('AR not supported on this browser. Try Chrome on Android or Safari on iOS.');
+      return `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glbUrl)}&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(window.location.href)};end;`;
+    }
+  };
+
+  const handleViewInRoom = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window === 'undefined') return;
+    const ua = navigator.userAgent;
+    const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isAndroid = /Android/.test(ua);
+    
+    if (!isIOS && !isAndroid) {
+      e.preventDefault();
+      setArToast('AR is only supported on mobile devices. Please open this page on your phone.');
       setTimeout(() => setArToast(null), 4000);
     }
   };
@@ -243,8 +244,10 @@ export default function ProductDetails({ params }: PageProps) {
                 </div>
               )}
 
-              {/* Visual Button */}
-              <button
+              {/* Visual Button - Now a native AR link */}
+              <a
+                href={getNativeARLink()}
+                rel="ar"
                 onClick={handleViewInRoom}
                 className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md border border-white/20 text-white px-3 py-2 rounded-xl flex items-center gap-2 transition-all hover:bg-black/60 hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] z-30 group overflow-hidden"
               >
@@ -255,26 +258,7 @@ export default function ProductDetails({ params }: PageProps) {
                 <span className="text-[10px] font-bold tracking-wider uppercase drop-shadow-md relative z-10">
                   View in Room
                 </span>
-              </button>
-
-              {/* Hidden model-viewer for AR activation — must be non-zero size to initialize */}
-              <model-viewer
-                ref={arViewerRef}
-                src={getModelUrl(product.id)}
-                ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
-                ar
-                ar-modes="webxr scene-viewer quick-look"
-                camera-controls
-                aria-hidden="true"
-                style={{
-                  position: 'fixed',
-                  top: '-9999px',
-                  left: '-9999px',
-                  width: '1px',
-                  height: '1px',
-                  pointerEvents: 'none',
-                }}
-              />
+              </a>
 
             </div>
 
