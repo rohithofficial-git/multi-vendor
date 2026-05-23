@@ -20,6 +20,7 @@ import {
   Box
 } from 'lucide-react';
 import Link from 'next/link';
+import WebAROverlay from '../../../components/3d/WebAROverlay';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -53,6 +54,7 @@ export default function ProductDetails({ params }: PageProps) {
   
   const [arToast, setArToast] = React.useState<string | null>(null);
   const [arLink, setArLink] = React.useState<string>('#');
+  const [showWebAR, setShowWebAR] = React.useState(false);
 
   useEffect(() => {
     if (!product) return;
@@ -70,7 +72,16 @@ export default function ProductDetails({ params }: PageProps) {
   }, [product]);
 
   const handleViewInRoom = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !product) return;
+    
+    // If it's a clothing item (doesn't have a real 3D model assigned)
+    const isApparel = product.category === 'Apparel & Style' || product.category === 'Shirts' || product.category === 'Pants';
+    if (isApparel) {
+      e.preventDefault();
+      setShowWebAR(true);
+      return;
+    }
+
     const ua = navigator.userAgent;
     const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const isAndroid = /Android/.test(ua);
@@ -220,6 +231,13 @@ export default function ProductDetails({ params }: PageProps) {
   return (
     <>
       <Navbar />
+
+      {showWebAR && product && (
+        <WebAROverlay 
+          imageUrl={activeImage || product.images[0]} 
+          onClose={() => setShowWebAR(false)} 
+        />
+      )}
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8 sm:px-6 lg:px-8">
         
