@@ -9,7 +9,7 @@ export const supabase = supabaseUrl && supabaseAnonKey
   : null;
 
 // Mock database storage for frontend fallback
-const MOCK_STORAGE_KEY = 'multi_vendor_db_v8';
+const MOCK_STORAGE_KEY = 'multi_vendor_db_v9';
 
 export interface User {
   id: string;
@@ -128,8 +128,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     compare_at_price: 220,
     category: 'Mobility & Gear',
     images: [
-      'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80'
+      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/MaterialsVariantsShoe/screenshot/screenshot.jpg',
+      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/MaterialsVariantsShoe/screenshot/screenshot.jpg'
     ],
     inventory: 45,
     status: 'active',
@@ -152,7 +152,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     compare_at_price: 500,
     category: 'Vanguard Living',
     images: [
-      'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80'
+      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/AntiqueCamera/screenshot/screenshot.jpg'
     ],
     inventory: 5,
     status: 'active',
@@ -175,7 +175,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     compare_at_price: 350,
     category: 'Acoustics & Time',
     images: [
-      'https://images.unsplash.com/photo-1594623930572-300a3011d9ae?w=800&auto=format&fit=crop&q=80'
+      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BoomBox/screenshot/screenshot.jpg'
     ],
     inventory: 12,
     status: 'active',
