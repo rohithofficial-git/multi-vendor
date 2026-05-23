@@ -1,20 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
+import Script from "next/script";
 
 /**
  * Registers the <model-viewer> custom element on the client.
- * Must be a Client Component so the import only runs in the browser.
- * Place this once in the root layout.
+ * Using next/script ensures it loads reliably on all devices without bundler issues.
  */
 export default function ModelViewerLoader() {
-  useEffect(() => {
-    // Guard: only register once
-    if (customElements.get("model-viewer")) return;
-    import("@google/model-viewer").catch((err) =>
-      console.warn("model-viewer failed to load:", err)
-    );
-  }, []);
-
-  return null;
+  return (
+    <Script
+      type="module"
+      src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.2.0/model-viewer.min.js"
+      strategy="lazyOnload"
+    />
+  );
 }

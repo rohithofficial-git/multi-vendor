@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect, Component } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Float, Stars, MeshDistortMaterial, ContactShadows, Environment } from '@react-three/drei';
+import { OrbitControls, Float, Stars, MeshDistortMaterial, ContactShadows, Environment, DeviceOrientationControls } from '@react-three/drei';
 import * as THREE from 'three';
 
 // ---------------------------------------------------------------------------
@@ -28,39 +28,7 @@ class CanvasErrorBoundary extends Component<
   }
 }
 
-// ---------------------------------------------------------------------------
-// DeviceOrientation camera controller – gyroscope-based look-around on mobile
-// ---------------------------------------------------------------------------
-function DeviceOrientationControls360({ active }: { active: boolean }) {
-  const { camera } = useThree();
-  const alpha = useRef(0);
-  const beta  = useRef(0);
-  const gamma = useRef(0);
 
-  useEffect(() => {
-    if (!active) return;
-    const handler = (e: DeviceOrientationEvent) => {
-      alpha.current = e.alpha ?? 0;
-      beta.current  = e.beta  ?? 0;
-      gamma.current = e.gamma ?? 0;
-    };
-    window.addEventListener('deviceorientation', handler, true);
-    return () => window.removeEventListener('deviceorientation', handler, true);
-  }, [active]);
-
-  useFrame(() => {
-    if (!active) return;
-    const euler = new THREE.Euler(
-      THREE.MathUtils.degToRad(beta.current  - 90),
-      THREE.MathUtils.degToRad(-alpha.current),
-      THREE.MathUtils.degToRad(-gamma.current),
-      'YXZ'
-    );
-    camera.quaternion.setFromEuler(euler);
-  });
-
-  return null;
-}
 
 // ---------------------------------------------------------------------------
 // 3-D scene sub-components
@@ -144,9 +112,13 @@ export default function VRShowroom() {
 
   // ── Detect mobile & WebGL support on mount ────────────────────────────────
   useEffect(() => {
+    const checkMobile = () => {
+      const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
+      return /Mobi|Android|iPhone|iPad|iPod/i.test(ua) || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    };
+    setIsMobile(checkMobile() || window.matchMedia('(max-width: 768px)').matches);
     const mobileQuery = window.matchMedia('(max-width: 768px)');
-    setIsMobile(mobileQuery.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(checkMobile() || e.matches);
     mobileQuery.addEventListener('change', handler);
 
     try {
@@ -166,8 +138,8 @@ export default function VRShowroom() {
   // ── Request iOS gyroscope permission ─────────────────────────────────────
   const requestGyroPermission = async (): Promise<boolean> => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const DevOrEvent = DeviceOrientationEvent as any;
-    if (typeof DevOrEvent.requestPermission === 'function') {
+    const DevOrEvent = typeof window !== 'undefined' ? (window as any).DeviceOrientationEvent : undefined;
+    if (DevOrEvent && typeof DevOrEvent.requestPermission === 'function') {
       try {
         const result: string = await DevOrEvent.requestPermission();
         return result === 'granted';
@@ -175,18 +147,8 @@ export default function VRShowroom() {
         return false;
       }
     }
-    // Android / non-iOS: verify sensor fires within 500 ms
-    return new Promise((resolve) => {
-      const check = (e: DeviceOrientationEvent) => {
-        window.removeEventListener('deviceorientation', check, true);
-        resolve(e.alpha !== null || e.beta !== null || e.gamma !== null);
-      };
-      window.addEventListener('deviceorientation', check, true);
-      setTimeout(() => {
-        window.removeEventListener('deviceorientation', check, true);
-        resolve(false);
-      }, 500);
-    });
+    // Android / non-iOS: assume granted as it doesn't require explicit permission API
+    return true;
   };
 
   // ── "Enter VR Mode" handler ───────────────────────────────────────────────
@@ -315,7 +277,7 @@ export default function VRShowroom() {
             </group>
 
             {/* Gyro controls on mobile when active, otherwise orbit */}
-            <DeviceOrientationControls360 active={gyroActive} />
+            {gyroActive && <DeviceOrientationControls />}
             {!gyroActive && (
               <OrbitControls
                 enablePan={false}

@@ -12,6 +12,7 @@
     "@google/model-viewer": "^4.2.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
+    "@react-three/xr": "^6.6.29",
     "@supabase/supabase-js": "^2.106.0",
     "@types/canvas-confetti": "^1.9.0",
     "@types/recharts": "^1.8.29",

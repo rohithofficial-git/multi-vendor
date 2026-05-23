@@ -51,34 +51,7 @@ export default function ProductDetails({ params }: PageProps) {
   const [activeImage, setActiveImage] = useState('');
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
   
-  // Ref for hidden model-viewer to trigger AR directly
-  const arViewerRef = React.useRef<HTMLElement>(null);
-  const [arToast, setArToast] = React.useState<string | null>(null);
-
-  const handleViewInRoom = async () => {
-    // Wait for model-viewer custom element to be defined (critical on production)
-    if (typeof customElements !== 'undefined') {
-      await customElements.whenDefined('model-viewer').catch(() => {});
-    }
-    const viewer = arViewerRef.current as any;
-    if (!viewer) {
-      setArToast('3D viewer not ready. Please wait a moment and try again.');
-      setTimeout(() => setArToast(null), 3500);
-      return;
-    }
-    if (typeof viewer.activateAR === 'function') {
-      try {
-        viewer.activateAR();
-      } catch {
-        setArToast('AR not supported on this device. Open on a mobile phone to view in your room.');
-        setTimeout(() => setArToast(null), 4000);
-      }
-    } else {
-      setArToast('AR not supported on this browser. Try Chrome on Android or Safari on iOS.');
-      setTimeout(() => setArToast(null), 4000);
-    }
-  };
-  
+  // We rely on native model-viewer ar-button for mobile AR support
   // Review form states
   const [userRating, setUserRating] = useState(5);
   const [userComment, setUserComment] = useState('');
@@ -236,45 +209,36 @@ export default function ProductDetails({ params }: PageProps) {
                 {product.category}
               </span>
               
-              {/* AR toast */}
-              {arToast && (
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-xs z-40 bg-gray-900/95 border border-cyan-500/50 text-white text-[10px] font-mono py-2 px-3 rounded-xl shadow-lg backdrop-blur-md text-center">
-                  {arToast}
-                </div>
-              )}
+              {/* Removed synthetic AR toast in favor of native UI */}
 
-              {/* Visual Button */}
-              <button
-                onClick={handleViewInRoom}
-                className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md border border-white/20 text-white px-3 py-2 rounded-xl flex items-center gap-2 transition-all hover:bg-black/60 hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] z-30 group overflow-hidden"
-              >
-                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
-                <div className="p-1.5 bg-brand rounded-lg shadow shadow-brand/50 relative z-10">
-                  <Smartphone className="h-3.5 w-3.5 text-white" />
-                </div>
-                <span className="text-[10px] font-bold tracking-wider uppercase drop-shadow-md relative z-10">
-                  View in Room
-                </span>
-              </button>
-
-              {/* Hidden model-viewer for AR activation — must be non-zero size to initialize */}
-              <model-viewer
-                ref={arViewerRef}
-                src={getModelUrl(product.id)}
-                ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
-                ar
-                ar-modes="webxr scene-viewer quick-look"
-                camera-controls
-                aria-hidden="true"
-                style={{
-                  position: 'fixed',
-                  top: '-9999px',
-                  left: '-9999px',
-                  width: '1px',
-                  height: '1px',
-                  pointerEvents: 'none',
-                }}
-              />
+              {/* Native AR model-viewer wrapper for proper mobile gesture support */}
+              <div className="absolute bottom-4 left-4 z-30">
+                <model-viewer
+                  src={getModelUrl(product.id)}
+                  ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+                  ar
+                  ar-modes="webxr scene-viewer quick-look"
+                  reveal="manual"
+                  style={{
+                    width: 'auto',
+                    height: 'auto',
+                    backgroundColor: 'transparent'
+                  }}
+                >
+                  <button
+                    slot="ar-button"
+                    className="bg-black/40 backdrop-blur-md border border-white/20 text-white px-3 py-2 rounded-xl flex items-center gap-2 transition-all hover:bg-black/60 hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] group overflow-hidden"
+                  >
+                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
+                    <div className="p-1.5 bg-brand rounded-lg shadow shadow-brand/50 relative z-10">
+                      <Smartphone className="h-3.5 w-3.5 text-white" />
+                    </div>
+                    <span className="text-[10px] font-bold tracking-wider uppercase drop-shadow-md relative z-10">
+                      View in Room
+                    </span>
+                  </button>
+                </model-viewer>
+              </div>
 
             </div>
 
