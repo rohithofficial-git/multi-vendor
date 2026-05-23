@@ -56,8 +56,9 @@ export default function ProductDetails({ params }: PageProps) {
 
   useEffect(() => {
     if (!product) return;
-    const glbUrl = getModelUrl(product.id);
-    const usdzUrl = "https://modelviewer.dev/shared-assets/models/Astronaut.usdz";
+    const urls = getModelUrl(product.id);
+    const glbUrl = urls.glb;
+    const usdzUrl = urls.usdz;
     const ua = navigator.userAgent;
     const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     
@@ -134,20 +135,35 @@ export default function ProductDetails({ params }: PageProps) {
     const semanticString = `${product.title} ${product.category} ${product.description}`.toLowerCase();
 
     if (semanticString.includes('shoe') || semanticString.includes('sneaker') || semanticString.includes('footwear')) {
-      return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb';
+      return { 
+        glb: 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb',
+        usdz: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz'
+      };
     }
     if (semanticString.includes('car') || semanticString.includes('vehicle') || semanticString.includes('auto')) {
-      return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/ToyCar/glTF-Binary/ToyCar.glb';
+      return {
+        glb: 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/ToyCar/glTF-Binary/ToyCar.glb',
+        usdz: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz'
+      };
     }
     if (semanticString.includes('camera') || semanticString.includes('photo')) {
-      return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/AntiqueCamera/glTF-Binary/AntiqueCamera.glb';
+      return {
+        glb: 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/AntiqueCamera/glTF-Binary/AntiqueCamera.glb',
+        usdz: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz'
+      };
     }
     if (semanticString.includes('audio') || semanticString.includes('speaker') || semanticString.includes('sound')) {
-      return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/BoomBox/glTF-Binary/BoomBox.glb';
+      return {
+        glb: 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/BoomBox/glTF-Binary/BoomBox.glb',
+        usdz: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz'
+      };
     }
 
-    // Default Fallback for shirt, helmet, etc.
-    return 'https://modelviewer.dev/shared-assets/models/Astronaut.glb';
+    // Default Fallback
+    return {
+      glb: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb',
+      usdz: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz'
+    };
   };
 
   // No Javascript intents needed - we will use a native overlay
