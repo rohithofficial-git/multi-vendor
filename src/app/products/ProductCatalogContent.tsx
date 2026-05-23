@@ -47,7 +47,7 @@ export default function ProductCatalogContent() {
   }, [searchParams]);
 
   // Categories list
-  const categories = ['Acoustics & Time', 'Vanguard Living', 'Mobility & Gear'];
+  const categories = ['Acoustics & Time', 'Vanguard Living', 'Mobility & Gear', 'Apparel & Style'];
 
   // Handle resets
   const handleResetFilters = () => {

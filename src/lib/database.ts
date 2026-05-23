@@ -21,6 +21,7 @@ export async function fetchProducts(): Promise<Product[]> {
     seller_name: (p.sellers as { studio_name: string })?.studio_name ?? '',
     category: String(p.title).includes('Shoe') || String(p.title).includes('Helmet') || String(p.title).includes('Scooter') ? 'Mobility & Gear' :
               String(p.title).includes('Audio') || String(p.title).includes('Watch') || String(p.title).includes('Headphones') || String(p.title).includes('BoomBox') ? 'Acoustics & Time' :
+              String(p.title).includes('Shirt') || String(p.title).includes('Pant') || String(p.title).includes('Jeans') || String(p.title).includes('Wallet') || String(p.title).includes('Sunglasses') ? 'Apparel & Style' :
               'Vanguard Living',
   })) as Product[];
 }
