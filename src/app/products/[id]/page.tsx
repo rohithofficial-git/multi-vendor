@@ -133,20 +133,14 @@ export default function ProductDetails({ params }: PageProps) {
     // 2. Otherwise, fall back to our semantic placeholders for demonstration
     const semanticString = `${product.title} ${product.category} ${product.description}`.toLowerCase();
 
-    if (semanticString.includes('shirt') || semanticString.includes('clothing') || semanticString.includes('apparel')) {
-      return 'https://raw.githubusercontent.com/adrianhajdin/project_threejs_ai/main/client/public/shirt_baked.glb';
-    }
     if (semanticString.includes('shoe') || semanticString.includes('sneaker') || semanticString.includes('footwear')) {
-      return 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb';
+      return 'https://modelviewer.dev/shared-assets/models/Shoe.glb';
     }
     if (semanticString.includes('chair') || semanticString.includes('furniture') || semanticString.includes('sofa')) {
       return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/SheenChair/glTF-Binary/SheenChair.glb';
     }
     if (semanticString.includes('car') || semanticString.includes('vehicle') || semanticString.includes('auto')) {
       return 'https://modelviewer.dev/shared-assets/models/ToyCar.glb';
-    }
-    if (semanticString.includes('helmet') || semanticString.includes('head') || semanticString.includes('gear')) {
-      return 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/FlightHelmet/glTF-Binary/FlightHelmet.glb';
     }
     if (semanticString.includes('camera') || semanticString.includes('photo')) {
       return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/AntiqueCamera/glTF-Binary/AntiqueCamera.glb';
@@ -155,7 +149,7 @@ export default function ProductDetails({ params }: PageProps) {
       return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/BoomBox/glTF-Binary/BoomBox.glb';
     }
 
-    // Default Fallback
+    // Default Fallback for shirt, helmet, etc.
     return 'https://modelviewer.dev/shared-assets/models/Astronaut.glb';
   };
 
