@@ -79,14 +79,15 @@ export default function WebAROverlay({ imageUrl, onClose }: WebAROverlayProps) {
           animate={{ opacity: 1, scale }}
           transition={{ type: "spring", damping: 20, stiffness: 100 }}
         >
-          <div className="relative shadow-2xl rounded-2xl overflow-hidden border-2 border-white/20 bg-black/40 backdrop-blur-sm">
+          <div className="relative pointer-events-none group">
             <img 
               src={imageUrl} 
               alt="AR View" 
-              className={`object-contain transition-all duration-300 ${isExpanded ? 'w-[80vw] h-[60vh]' : 'w-[250px] h-[350px]'}`} 
+              className={`object-contain transition-all duration-300 pointer-events-auto drop-shadow-2xl ${isExpanded ? 'w-[80vw] h-[60vh]' : 'w-[350px] h-[450px]'}`} 
+              style={{ mixBlendMode: 'multiply', filter: 'contrast(1.1) drop-shadow(0px 20px 30px rgba(0,0,0,0.5))' }}
             />
-            {/* Holographic scanning effect */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent w-full h-[20%] animate-[scan_2s_linear_infinite]" />
+            {/* Holographic scanning effect overlaid strictly on the image area */}
+            <div className="absolute inset-0 mix-blend-screen opacity-50 bg-gradient-to-b from-transparent via-cyan-400/30 to-transparent w-full h-[20%] animate-[scan_2s_linear_infinite] pointer-events-none" />
           </div>
         </motion.div>
       )}
