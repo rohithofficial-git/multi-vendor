@@ -52,20 +52,21 @@ export default function ProductDetails({ params }: PageProps) {
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
   
   const [arToast, setArToast] = React.useState<string | null>(null);
+  const [arLink, setArLink] = React.useState<string>('#');
 
-  const getNativeARLink = () => {
-    if (typeof window === 'undefined') return '#';
+  useEffect(() => {
+    if (!product) return;
     const glbUrl = getModelUrl(product.id);
     const usdzUrl = "https://modelviewer.dev/shared-assets/models/Astronaut.usdz";
     const ua = navigator.userAgent;
     const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     
     if (isIOS) {
-      return usdzUrl;
+      setArLink(usdzUrl);
     } else {
-      return `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glbUrl)}&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(window.location.href)};end;`;
+      setArLink(`intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glbUrl)}&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(window.location.href)};end;`);
     }
-  };
+  }, [product]);
 
   const handleViewInRoom = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (typeof window === 'undefined') return;
@@ -246,7 +247,7 @@ export default function ProductDetails({ params }: PageProps) {
 
               {/* Visual Button - Now a native AR link */}
               <a
-                href={getNativeARLink()}
+                href={arLink}
                 rel="ar"
                 onClick={handleViewInRoom}
                 className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md border border-white/20 text-white px-3 py-2 rounded-xl flex items-center gap-2 transition-all hover:bg-black/60 hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] z-30 group overflow-hidden"
