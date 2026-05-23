@@ -52,6 +52,8 @@ export interface Product {
   reviews_count: number;
   is_ai_recommended?: boolean;
   created_at: string;
+  model_url?: string;
+  usdz_url?: string;
 }
 
 export interface Order {
