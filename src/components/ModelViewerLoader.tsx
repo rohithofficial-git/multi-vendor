@@ -11,7 +11,7 @@ export default function ModelViewerLoader() {
     <Script
       type="module"
       src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.2.0/model-viewer.min.js"
-      strategy="lazyOnload"
+      strategy="afterInteractive"
     />
   );
 }
