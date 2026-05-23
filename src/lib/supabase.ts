@@ -9,7 +9,7 @@ export const supabase = supabaseUrl && supabaseAnonKey
   : null;
 
 // Mock database storage for frontend fallback
-const MOCK_STORAGE_KEY = 'multi_vendor_db_v6';
+const MOCK_STORAGE_KEY = 'multi_vendor_db_v7';
 
 export interface User {
   id: string;
@@ -118,175 +118,485 @@ export interface Notification {
 // Initial mock data if empty
 export const INITIAL_PRODUCTS: Product[] = [
   {
-    "id": "prod-perfect-1",
+    "id": "prod-shirt-1",
+    "seller_id": "sel-1",
+    "seller_name": "Aetheris Labs",
+    "title": "Classic White Oxford Shirt",
+    "description": "Premium cotton oxford shirt perfect for formal and casual wear. Breathable, wrinkle-resistant, and tailored for a perfect fit.",
+    "price": 45,
+    "compare_at_price": 60,
+    "category": "Apparel & Style",
+    "images": [
+      "https://images.unsplash.com/photo-1596755094514-f87e32f0b224?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=80"
+    ],
+    "inventory": 100,
+    "status": "active",
+    "specs": {
+      "Material": "100% Cotton",
+      "Fit": "Regular",
+      "Care": "Machine Wash"
+    },
+    "variants": {
+      "Size": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "Color": [
+        "White",
+        "Light Blue"
+      ]
+    },
+    "average_rating": 4.8,
+    "reviews_count": 120,
+    "is_ai_recommended": true,
+    "created_at": "2026-05-23T06:43:04.796Z"
+  },
+  {
+    "id": "prod-shirt-2",
+    "seller_id": "sel-1",
+    "seller_name": "Aetheris Labs",
+    "title": "Urban Graphic Print T-Shirt",
+    "description": "Streetwear-inspired graphic tee made from heavyweight cotton. Features a bold front print and relaxed drop-shoulder fit.",
+    "price": 30,
+    "compare_at_price": 40,
+    "category": "Apparel & Style",
+    "images": [
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=80"
+    ],
+    "inventory": 50,
+    "status": "active",
+    "specs": {
+      "Material": "100% Heavyweight Cotton",
+      "Fit": "Oversized",
+      "Neckline": "Crew"
+    },
+    "variants": {
+      "Size": [
+        "M",
+        "L",
+        "XL"
+      ],
+      "Color": [
+        "Black",
+        "Charcoal"
+      ]
+    },
+    "average_rating": 4.5,
+    "reviews_count": 85,
+    "is_ai_recommended": false,
+    "created_at": "2026-05-23T06:43:04.797Z"
+  },
+  {
+    "id": "prod-shirt-3",
+    "seller_id": "sel-2",
+    "seller_name": "Lumina Craft",
+    "title": "Vintage Denim Casual Shirt",
+    "description": "Rugged vintage wash denim shirt with pearl snap buttons and dual chest pockets. Ideal for layering.",
+    "price": 55,
+    "compare_at_price": 75,
+    "category": "Apparel & Style",
+    "images": [
+      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1596755094514-f87e32f0b224?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80"
+    ],
+    "inventory": 40,
+    "status": "active",
+    "specs": {
+      "Material": "100% Cotton Denim",
+      "Fit": "Slim Fit",
+      "Closure": "Snap Buttons"
+    },
+    "variants": {
+      "Size": [
+        "S",
+        "M",
+        "L"
+      ],
+      "Wash": [
+        "Light Blue",
+        "Dark Indigo"
+      ]
+    },
+    "average_rating": 4.7,
+    "reviews_count": 42,
+    "is_ai_recommended": true,
+    "created_at": "2026-05-23T06:43:04.797Z"
+  },
+  {
+    "id": "prod-shirt-4",
+    "seller_id": "sel-2",
+    "seller_name": "Lumina Craft",
+    "title": "Essential Polo Shirt",
+    "description": "Classic pique polo shirt with a ribbed collar and cuffs. Designed for breathability and all-day comfort.",
+    "price": 35,
+    "compare_at_price": 50,
+    "category": "Apparel & Style",
+    "images": [
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80"
+    ],
+    "inventory": 80,
+    "status": "active",
+    "specs": {
+      "Material": "Cotton Pique",
+      "Fit": "Regular",
+      "Sleeve": "Short Sleeve"
+    },
+    "variants": {
+      "Size": [
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "Color": [
+        "Navy",
+        "White",
+        "Black"
+      ]
+    },
+    "average_rating": 4.6,
+    "reviews_count": 95,
+    "is_ai_recommended": false,
+    "created_at": "2026-05-23T06:43:04.797Z"
+  },
+  {
+    "id": "prod-shirt-5",
     "seller_id": "sel-3",
     "seller_name": "Veloce Dynamics",
-    "title": "Vanguard Running Shoe",
-    "description": "Ultra-responsive running shoe featuring advanced foam cushioning and a breathable mesh upper. Engineered for peak performance and urban aesthetics.",
-    "price": 135,
-    "compare_at_price": 160,
-    "category": "Footwear",
+    "title": "Breathable Linen Summer Shirt",
+    "description": "Lightweight linen blend shirt for warm weather. Features a relaxed collar and a breezy, comfortable fit.",
+    "price": 48,
+    "compare_at_price": 65,
+    "category": "Apparel & Style",
     "images": [
-      "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80"
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1596755094514-f87e32f0b224?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=80"
+    ],
+    "inventory": 60,
+    "status": "active",
+    "specs": {
+      "Material": "55% Linen, 45% Cotton",
+      "Fit": "Relaxed",
+      "Care": "Hand Wash"
+    },
+    "variants": {
+      "Size": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "Color": [
+        "Beige",
+        "Olive",
+        "White"
+      ]
+    },
+    "average_rating": 4.9,
+    "reviews_count": 34,
+    "is_ai_recommended": true,
+    "created_at": "2026-05-23T06:43:04.797Z"
+  },
+  {
+    "id": "prod-pant-1",
+    "seller_id": "sel-1",
+    "seller_name": "Aetheris Labs",
+    "title": "Slim Fit Chino Pants",
+    "description": "Versatile stretch chino pants that transition seamlessly from the office to weekend outings.",
+    "price": 55,
+    "compare_at_price": 70,
+    "category": "Apparel & Style",
+    "images": [
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1555689502-c4b22d76c56f?w=800&auto=format&fit=crop&q=80"
+    ],
+    "inventory": 70,
+    "status": "active",
+    "specs": {
+      "Material": "98% Cotton, 2% Elastane",
+      "Fit": "Slim",
+      "Style": "Flat Front"
+    },
+    "variants": {
+      "Waist": [
+        "30",
+        "32",
+        "34",
+        "36"
+      ],
+      "Color": [
+        "Khaki",
+        "Navy",
+        "Olive"
+      ]
+    },
+    "average_rating": 4.7,
+    "reviews_count": 210,
+    "is_ai_recommended": true,
+    "created_at": "2026-05-23T06:43:04.797Z"
+  },
+  {
+    "id": "prod-pant-2",
+    "seller_id": "sel-2",
+    "seller_name": "Lumina Craft",
+    "title": "Classic Indigo Straight Jeans",
+    "description": "Timeless straight-leg jeans crafted from premium selvedge denim. Built to fade beautifully over time.",
+    "price": 85,
+    "compare_at_price": 110,
+    "category": "Apparel & Style",
+    "images": [
+      "https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1555689502-c4b22d76c56f?w=800&auto=format&fit=crop&q=80"
     ],
     "inventory": 45,
     "status": "active",
     "specs": {
+      "Material": "100% Selvedge Denim",
+      "Fit": "Straight Leg",
+      "Closure": "Button Fly"
+    },
+    "variants": {
+      "Waist": [
+        "30",
+        "31",
+        "32",
+        "33",
+        "34"
+      ],
+      "Length": [
+        "30",
+        "32",
+        "34"
+      ]
+    },
+    "average_rating": 4.8,
+    "reviews_count": 145,
+    "is_ai_recommended": true,
+    "created_at": "2026-05-23T06:43:04.797Z"
+  },
+  {
+    "id": "prod-pant-3",
+    "seller_id": "sel-3",
+    "seller_name": "Veloce Dynamics",
+    "title": "Tactical Cargo Utility Pants",
+    "description": "Durable ripstop cargo pants with multiple reinforced pockets and articulated knees for mobility.",
+    "price": 65,
+    "compare_at_price": 90,
+    "category": "Apparel & Style",
+    "images": [
+      "https://images.unsplash.com/photo-1555689502-c4b22d76c56f?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&auto=format&fit=crop&q=80"
+    ],
+    "inventory": 55,
+    "status": "active",
+    "specs": {
+      "Material": "Nylon Ripstop",
+      "Fit": "Relaxed",
+      "Features": "Water-resistant"
+    },
+    "variants": {
+      "Size": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "Color": [
+        "Black",
+        "Olive Drab"
+      ]
+    },
+    "average_rating": 4.6,
+    "reviews_count": 88,
+    "is_ai_recommended": false,
+    "created_at": "2026-05-23T06:43:04.797Z"
+  },
+  {
+    "id": "prod-pant-4",
+    "seller_id": "sel-1",
+    "seller_name": "Aetheris Labs",
+    "title": "Everyday Jogger Sweatpants",
+    "description": "Ultra-soft fleece joggers featuring an elastic waistband, tapered fit, and secure zip pockets.",
+    "price": 40,
+    "compare_at_price": 55,
+    "category": "Apparel & Style",
+    "images": [
+      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1555689502-c4b22d76c56f?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80"
+    ],
+    "inventory": 90,
+    "status": "active",
+    "specs": {
+      "Material": "Cotton Fleece Blend",
+      "Fit": "Tapered",
+      "Features": "Zip Pockets"
+    },
+    "variants": {
+      "Size": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "Color": [
+        "Heather Grey",
+        "Black"
+      ]
+    },
+    "average_rating": 4.9,
+    "reviews_count": 310,
+    "is_ai_recommended": true,
+    "created_at": "2026-05-23T06:43:04.797Z"
+  },
+  {
+    "id": "prod-acc-1",
+    "seller_id": "sel-3",
+    "seller_name": "Veloce Dynamics",
+    "title": "Urban Runner Sneakers",
+    "description": "Lightweight performance sneakers designed for everyday urban commuting. Features responsive cushioning and breathable mesh.",
+    "price": 120,
+    "compare_at_price": 150,
+    "category": "Mobility & Gear",
+    "images": [
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&auto=format&fit=crop&q=80"
+    ],
+    "inventory": 30,
+    "status": "active",
+    "specs": {
       "Material": "Engineered Mesh",
-      "Sole": "Responsive Foam",
-      "Weight": "250g"
+      "Sole": "Rubber",
+      "Weight": "280g"
     },
     "variants": {
       "Size": [
         "8",
         "9",
         "10",
-        "11"
+        "11",
+        "12"
       ],
       "Color": [
-        "Pacific Blue",
-        "Crimson"
+        "Crimson Red",
+        "Midnight Black"
       ]
     },
     "average_rating": 4.8,
-    "reviews_count": 312,
+    "reviews_count": 142,
     "is_ai_recommended": true,
-    "created_at": "2026-05-23T07:12:07.526Z",
-    "model_url": "https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb"
+    "created_at": "2026-05-23T06:43:04.797Z"
   },
   {
-    "id": "prod-perfect-3",
-    "seller_id": "sel-1",
-    "seller_name": "Aetheris Labs",
-    "title": "Antique Film Camera",
-    "description": "A fully restored vintage folding camera. Experience the mechanical precision of classic photography with authentic bellows and manual focus.",
-    "price": 450,
-    "compare_at_price": 520,
-    "category": "Photography",
+    "id": "prod-acc-2",
+    "seller_id": "sel-2",
+    "seller_name": "Lumina Craft",
+    "title": "Vintage Film Camera",
+    "description": "A fully restored analog 35mm film camera. Experience the raw beauty of photography with manual focus and mechanical shutter.",
+    "price": 250,
+    "compare_at_price": 300,
+    "category": "Vanguard Living",
     "images": [
-      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1588602061214-41d3ee5026bd?w=800&auto=format&fit=crop&q=80"
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=80"
     ],
-    "inventory": 3,
+    "inventory": 5,
     "status": "active",
     "specs": {
-      "Format": "Medium Format Film",
-      "Condition": "Restored Antique",
-      "Lens": "Anastigmat"
+      "Format": "35mm Film",
+      "Lens Mount": "M42",
+      "Condition": "Refurbished"
     },
     "variants": {
-      "Finish": [
-        "Original Brass",
-        "Matte Black"
+      "Body": [
+        "Silver/Black",
+        "All Black"
       ]
     },
-    "average_rating": 5,
-    "reviews_count": 14,
-    "is_ai_recommended": false,
-    "created_at": "2026-05-23T07:12:07.527Z",
-    "model_url": "https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/AntiqueCamera/glTF-Binary/AntiqueCamera.glb"
+    "average_rating": 4.9,
+    "reviews_count": 24,
+    "is_ai_recommended": true,
+    "created_at": "2026-05-23T06:43:04.797Z"
   },
   {
-    "id": "prod-perfect-4",
-    "seller_id": "sel-3",
-    "seller_name": "Veloce Dynamics",
-    "title": "Classic Wooden Toy Car",
-    "description": "Beautifully crafted wooden toy car with a glossy red finish and rolling wheels. A timeless collectible or perfect gift.",
-    "price": 35,
-    "compare_at_price": 45,
-    "category": "Collectibles",
+    "id": "prod-acc-3",
+    "seller_id": "sel-1",
+    "seller_name": "Aetheris Labs",
+    "title": "Classic Aviator Sunglasses",
+    "description": "Premium polarized sunglasses with a lightweight titanium frame and UV400 protection.",
+    "price": 85,
+    "compare_at_price": 120,
+    "category": "Apparel & Style",
     "images": [
-      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&auto=format&fit=crop&q=80"
+      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1572635196237-14b3f281501f?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80"
     ],
-    "inventory": 120,
+    "inventory": 45,
     "status": "active",
     "specs": {
-      "Material": "Birch Wood",
-      "Finish": "Non-toxic Gloss Paint",
-      "Dimensions": "15x8x6 cm"
+      "Frame": "Titanium",
+      "Lenses": "Polarized TAC",
+      "UV Protection": "100%"
     },
     "variants": {
-      "Color": [
-        "Racing Red",
-        "Vintage Yellow"
+      "Frame Color": [
+        "Gold",
+        "Silver",
+        "Gunmetal"
       ]
     },
     "average_rating": 4.6,
-    "reviews_count": 230,
+    "reviews_count": 98,
     "is_ai_recommended": false,
-    "created_at": "2026-05-23T07:12:07.527Z",
-    "model_url": "https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/ToyCar/glTF-Binary/ToyCar.glb"
+    "created_at": "2026-05-23T06:43:04.797Z"
   },
   {
-    "id": "prod-perfect-5",
+    "id": "prod-acc-4",
     "seller_id": "sel-2",
     "seller_name": "Lumina Craft",
-    "title": "Retro BoomBox Audio System",
-    "description": "Bring the 80s back with this massive retro boombox. Features dual cassette decks, massive acoustic speakers, and modern Bluetooth integration.",
-    "price": 280,
-    "compare_at_price": 350,
-    "category": "Audio",
+    "title": "Minimalist Leather Backpack",
+    "description": "Handcrafted full-grain leather backpack. Features a padded laptop sleeve and durable brass hardware.",
+    "price": 180,
+    "compare_at_price": 220,
+    "category": "Apparel & Style",
     "images": [
-      "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1518177695326-7edb561c28c8?w=800&auto=format&fit=crop&q=80"
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1491637639811-60e2756cc1c7?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=80"
     ],
-    "inventory": 22,
+    "inventory": 15,
     "status": "active",
     "specs": {
-      "Output": "40W RMS",
-      "Connectivity": "Bluetooth 5.0, Cassette, FM",
-      "Battery": "Rechargeable Lithium"
+      "Material": "Full-Grain Leather",
+      "Capacity": "18L",
+      "Laptop Fit": "Up to 15 inch"
     },
     "variants": {
-      "Style": [
-        "Silver Classic",
-        "Neon Edition"
+      "Color": [
+        "Cognac Brown",
+        "Midnight Black"
       ]
     },
-    "average_rating": 4.7,
-    "reviews_count": 91,
+    "average_rating": 4.8,
+    "reviews_count": 67,
     "is_ai_recommended": true,
-    "created_at": "2026-05-23T07:12:07.527Z",
-    "model_url": "https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/BoomBox/glTF-Binary/BoomBox.glb"
-  },
-  {
-    "id": "prod-perfect-6",
-    "seller_id": "sel-1",
-    "seller_name": "Aetheris Labs",
-    "title": "Apollo Space Explorer Suit Replica",
-    "description": "An incredibly detailed 1:1 replica of the historic astronaut space suit. Perfect for high-end collectors and museums.",
-    "price": 4500,
-    "compare_at_price": 5000,
-    "category": "Collectibles",
-    "images": [
-      "https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?w=800&auto=format&fit=crop&q=80"
-    ],
-    "inventory": 2,
-    "status": "active",
-    "specs": {
-      "Scale": "1:1 Full Size",
-      "Materials": "Beta Cloth, Nomex",
-      "Certification": "Museum Grade"
-    },
-    "variants": {
-      "Mission Patch": [
-        "Apollo 11",
-        "Apollo 13"
-      ]
-    },
-    "average_rating": 5,
-    "reviews_count": 3,
-    "is_ai_recommended": true,
-    "created_at": "2026-05-23T07:12:07.527Z",
-    "model_url": "https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+    "created_at": "2026-05-23T06:43:04.797Z"
   }
 ];
 
