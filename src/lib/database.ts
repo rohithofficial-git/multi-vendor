@@ -19,7 +19,9 @@ export async function fetchProducts(): Promise<Product[]> {
   return data.map((p: Record<string, unknown>) => ({
     ...p,
     seller_name: (p.sellers as { studio_name: string })?.studio_name ?? '',
-    category: '', // categories handled separately if needed
+    category: String(p.title).includes('Shoe') || String(p.title).includes('Helmet') || String(p.title).includes('Scooter') ? 'Mobility & Gear' :
+              String(p.title).includes('Audio') || String(p.title).includes('Watch') || String(p.title).includes('Headphones') || String(p.title).includes('BoomBox') ? 'Acoustics & Time' :
+              'Vanguard Living',
   })) as Product[];
 }
 
