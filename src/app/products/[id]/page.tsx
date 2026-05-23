@@ -59,6 +59,10 @@ export default function ProductDetails({ params }: PageProps) {
   useEffect(() => {
     if (!product) return;
     const urls = getModelUrl(product.id);
+    if (!urls) {
+      setArLink('#');
+      return;
+    }
     const glbUrl = urls.glb;
     const usdzUrl = urls.usdz;
     const ua = navigator.userAgent;
@@ -74,9 +78,10 @@ export default function ProductDetails({ params }: PageProps) {
   const handleViewInRoom = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (typeof window === 'undefined' || !product) return;
     
-    // If it's a clothing item (doesn't have a real 3D model assigned)
-    const isApparel = product.category === 'Apparel & Style' || product.category === 'Shirts' || product.category === 'Pants';
-    if (isApparel) {
+    const urls = getModelUrl(product.id);
+    
+    // If no dedicated 3D model exists, always fall back to our custom Web AR overlay
+    if (!urls) {
       e.preventDefault();
       setShowWebAR(true);
       return;
@@ -166,18 +171,15 @@ export default function ProductDetails({ params }: PageProps) {
         usdz: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz'
       };
     }
-    if (semanticString.includes('audio') || semanticString.includes('speaker') || semanticString.includes('sound')) {
+    if (semanticString.includes('audio') || semanticString.includes('speaker') || semanticString.includes('sound') || semanticString.includes('boombox')) {
       return {
         glb: 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/BoomBox/glTF-Binary/BoomBox.glb',
         usdz: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz'
       };
     }
 
-    // Default Fallback
-    return {
-      glb: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb',
-      usdz: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz'
-    };
+    // Default Fallback - Return null so we use the custom Web AR overlay instead of Astronaut!
+    return null;
   };
 
   // No Javascript intents needed - we will use a native overlay
