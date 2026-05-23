@@ -1,20 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Poppins } from "next/font/google";
+
 import "./globals.css";
 import ThemeWrapper from "../components/ThemeWrapper";
 import ModelViewerLoader from "../components/ModelViewerLoader";
 
-const inter = Inter({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const poppins = Poppins({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
+// Bypassing next/font to prevent Vercel build timeout errors
+// We will use standard CSS custom properties instead.
 
 export const metadata: Metadata = {
   title: " Horizon | Futuristic Multi-Vendor Luxury Marketplace",
@@ -54,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${poppins.variable} h-full antialiased dark`}
+      className="h-full antialiased dark"
       style={{ colorScheme: "dark" }}
     >
       <body className="min-h-full flex flex-col bg-theme-bg-from text-theme-text transition-colors duration-500">
