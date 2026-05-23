@@ -9,7 +9,7 @@ export const supabase = supabaseUrl && supabaseAnonKey
   : null;
 
 // Mock database storage for frontend fallback
-const MOCK_STORAGE_KEY = 'multi_vendor_db_v5';
+const MOCK_STORAGE_KEY = 'multi_vendor_db_v6';
 
 export interface User {
   id: string;
@@ -151,7 +151,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "average_rating": 4.8,
     "reviews_count": 312,
     "is_ai_recommended": true,
-    "created_at": "2026-05-23T06:57:19.417Z"
+    "created_at": "2026-05-23T07:12:07.526Z",
+    "model_url": "https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb"
   },
   {
     "id": "prod-perfect-3",
@@ -183,7 +184,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "average_rating": 5,
     "reviews_count": 14,
     "is_ai_recommended": false,
-    "created_at": "2026-05-23T06:57:19.418Z"
+    "created_at": "2026-05-23T07:12:07.527Z",
+    "model_url": "https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/AntiqueCamera/glTF-Binary/AntiqueCamera.glb"
   },
   {
     "id": "prod-perfect-4",
@@ -215,7 +217,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "average_rating": 4.6,
     "reviews_count": 230,
     "is_ai_recommended": false,
-    "created_at": "2026-05-23T06:57:19.418Z"
+    "created_at": "2026-05-23T07:12:07.527Z",
+    "model_url": "https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/ToyCar/glTF-Binary/ToyCar.glb"
   },
   {
     "id": "prod-perfect-5",
@@ -247,7 +250,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "average_rating": 4.7,
     "reviews_count": 91,
     "is_ai_recommended": true,
-    "created_at": "2026-05-23T06:57:19.418Z"
+    "created_at": "2026-05-23T07:12:07.527Z",
+    "model_url": "https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/BoomBox/glTF-Binary/BoomBox.glb"
   },
   {
     "id": "prod-perfect-6",
@@ -279,7 +283,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "average_rating": 5,
     "reviews_count": 3,
     "is_ai_recommended": true,
-    "created_at": "2026-05-23T06:57:19.418Z"
+    "created_at": "2026-05-23T07:12:07.527Z",
+    "model_url": "https://modelviewer.dev/shared-assets/models/Astronaut.glb"
   }
 ];
 

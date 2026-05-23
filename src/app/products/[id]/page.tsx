@@ -128,7 +128,10 @@ export default function ProductDetails({ params }: PageProps) {
 
     // 1. If the vendor uploaded their own 3D model, ALWAYS use it!
     if ((product as any).model_url) {
-      return (product as any).model_url;
+      return {
+        glb: (product as any).model_url,
+        usdz: (product as any).usdz_url || 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz'
+      };
     }
 
     // 2. Otherwise, fall back to our semantic placeholders for demonstration
