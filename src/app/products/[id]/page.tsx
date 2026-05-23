@@ -134,13 +134,10 @@ export default function ProductDetails({ params }: PageProps) {
     const semanticString = `${product.title} ${product.category} ${product.description}`.toLowerCase();
 
     if (semanticString.includes('shoe') || semanticString.includes('sneaker') || semanticString.includes('footwear')) {
-      return 'https://modelviewer.dev/shared-assets/models/Shoe.glb';
-    }
-    if (semanticString.includes('chair') || semanticString.includes('furniture') || semanticString.includes('sofa')) {
-      return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/SheenChair/glTF-Binary/SheenChair.glb';
+      return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb';
     }
     if (semanticString.includes('car') || semanticString.includes('vehicle') || semanticString.includes('auto')) {
-      return 'https://modelviewer.dev/shared-assets/models/ToyCar.glb';
+      return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/ToyCar/glTF-Binary/ToyCar.glb';
     }
     if (semanticString.includes('camera') || semanticString.includes('photo')) {
       return 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/AntiqueCamera/glTF-Binary/AntiqueCamera.glb';

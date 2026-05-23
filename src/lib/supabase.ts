@@ -9,7 +9,7 @@ export const supabase = supabaseUrl && supabaseAnonKey
   : null;
 
 // Mock database storage for frontend fallback
-const MOCK_STORAGE_KEY = 'multi_vendor_db_v4';
+const MOCK_STORAGE_KEY = 'multi_vendor_db_v5';
 
 export interface User {
   id: string;
@@ -151,39 +151,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "average_rating": 4.8,
     "reviews_count": 312,
     "is_ai_recommended": true,
-    "created_at": "2026-05-23T06:51:33.871Z"
-  },
-  {
-    "id": "prod-perfect-2",
-    "seller_id": "sel-2",
-    "seller_name": "Lumina Craft",
-    "title": "Sheen Velvet Chair",
-    "description": "Modern minimalist chair featuring a beautifully crafted solid wood frame and plush blue velvet upholstery. Perfect for contemporary living spaces.",
-    "price": 340,
-    "compare_at_price": 450,
-    "category": "Furniture",
-    "images": [
-      "https://images.unsplash.com/photo-1506439009961-36b1351d3b37?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1592078615290-033ee584e267?w=800&auto=format&fit=crop&q=80"
-    ],
-    "inventory": 15,
-    "status": "active",
-    "specs": {
-      "Frame": "Solid Ash Wood",
-      "Fabric": "Premium Velvet",
-      "Style": "Mid-Century Modern"
-    },
-    "variants": {
-      "Fabric Color": [
-        "Royal Blue",
-        "Emerald Green"
-      ]
-    },
-    "average_rating": 4.9,
-    "reviews_count": 85,
-    "is_ai_recommended": true,
-    "created_at": "2026-05-23T06:51:33.873Z"
+    "created_at": "2026-05-23T06:57:19.417Z"
   },
   {
     "id": "prod-perfect-3",
@@ -215,7 +183,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "average_rating": 5,
     "reviews_count": 14,
     "is_ai_recommended": false,
-    "created_at": "2026-05-23T06:51:33.873Z"
+    "created_at": "2026-05-23T06:57:19.418Z"
   },
   {
     "id": "prod-perfect-4",
@@ -247,7 +215,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "average_rating": 4.6,
     "reviews_count": 230,
     "is_ai_recommended": false,
-    "created_at": "2026-05-23T06:51:33.873Z"
+    "created_at": "2026-05-23T06:57:19.418Z"
   },
   {
     "id": "prod-perfect-5",
@@ -259,8 +227,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "compare_at_price": 350,
     "category": "Audio",
     "images": [
-      "https://images.unsplash.com/photo-1557008127-d4fa2ea6d061?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1605380582846-5e580d1964f5?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=800&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1518177695326-7edb561c28c8?w=800&auto=format&fit=crop&q=80"
     ],
     "inventory": 22,
@@ -279,7 +247,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "average_rating": 4.7,
     "reviews_count": 91,
     "is_ai_recommended": true,
-    "created_at": "2026-05-23T06:51:33.873Z"
+    "created_at": "2026-05-23T06:57:19.418Z"
   },
   {
     "id": "prod-perfect-6",
@@ -311,7 +279,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "average_rating": 5,
     "reviews_count": 3,
     "is_ai_recommended": true,
-    "created_at": "2026-05-23T06:51:33.873Z"
+    "created_at": "2026-05-23T06:57:19.418Z"
   }
 ];
 
