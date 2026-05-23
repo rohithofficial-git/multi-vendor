@@ -11,6 +11,8 @@ interface WebAROverlayProps {
 
 export default function WebAROverlay({ imageUrl, onClose }: WebAROverlayProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -48,6 +50,63 @@ export default function WebAROverlay({ imageUrl, onClose }: WebAROverlayProps) {
     };
   }, []);
 
+  // Canvas background removal
+  useEffect(() => {
+    if (!imageUrl || !canvasRef.current || !imgRef.current) return;
+    
+    const img = imgRef.current;
+    img.crossOrigin = "anonymous";
+    
+    img.onload = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return;
+      
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      
+      try {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        
+        // Sample top-left pixel as background color
+        const bgR = data[0];
+        const bgG = data[1];
+        const bgB = data[2];
+        
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          
+          // Calculate distance from background color
+          const dist = Math.sqrt(
+            Math.pow(r - bgR, 2) + 
+            Math.pow(g - bgG, 2) + 
+            Math.pow(b - bgB, 2)
+          );
+          
+          // If the pixel is very close to the background color, make it transparent
+          if (dist < 35) {
+            data[i + 3] = 0; // Fully transparent
+          } else if (dist < 60) {
+            // Smooth edge transition
+            data[i + 3] = Math.floor(((dist - 35) / 25) * 255);
+          }
+        }
+        
+        ctx.putImageData(imageData, 0, 0);
+      } catch (e) {
+        console.error("Canvas CORS error, cannot remove background", e);
+      }
+    };
+    
+    // Trigger load
+    img.src = imageUrl;
+  }, [imageUrl]);
+
   return (
     <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center overflow-hidden touch-none">
       
@@ -80,14 +139,15 @@ export default function WebAROverlay({ imageUrl, onClose }: WebAROverlayProps) {
           transition={{ type: "spring", damping: 20, stiffness: 100 }}
         >
           <div className="relative pointer-events-none group">
-            <img 
-              src={imageUrl} 
-              alt="AR View" 
-              className={`object-contain transition-all duration-300 pointer-events-auto drop-shadow-2xl ${isExpanded ? 'w-[80vw] h-[60vh]' : 'w-[350px] h-[450px]'}`} 
-              style={{ mixBlendMode: 'multiply', filter: 'contrast(1.1) drop-shadow(0px 20px 30px rgba(0,0,0,0.5))' }}
+            {/* Hidden image source for canvas drawing */}
+            <img ref={imgRef} src="" alt="" className="hidden" />
+            
+            <canvas 
+              ref={canvasRef}
+              className={`object-contain transition-all duration-300 pointer-events-auto drop-shadow-[0_20px_30px_rgba(0,0,0,0.6)] ${isExpanded ? 'w-[80vw] h-[60vh]' : 'w-[350px] h-[450px]'}`}
             />
             {/* Holographic scanning effect overlaid strictly on the image area */}
-            <div className="absolute inset-0 mix-blend-screen opacity-50 bg-gradient-to-b from-transparent via-cyan-400/30 to-transparent w-full h-[20%] animate-[scan_2s_linear_infinite] pointer-events-none" />
+            <div className="absolute inset-0 mix-blend-screen opacity-50 bg-gradient-to-b from-transparent via-cyan-400/30 to-transparent w-full h-[20%] animate-[scan_2s_linear_infinite] pointer-events-none rounded-xl" />
           </div>
         </motion.div>
       )}
