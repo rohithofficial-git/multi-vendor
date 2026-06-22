@@ -113,7 +113,7 @@ export default function AdminLoginPage() {
               <input
                 type="email"
                 required
-                placeholder="admin@elitehub.com"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-theme-bg-from/50 border border-theme-border rounded-xl px-4 py-3 text-sm text-theme-text placeholder-theme-muted/50 outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
