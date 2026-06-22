@@ -39,7 +39,8 @@ export default function Navbar() {
     setTheme,
     logout,
     markNotificationRead,
-    clearNotifications
+    clearNotifications,
+    dbConnected
   } = useStore();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -231,18 +232,7 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* Notification Bell */}
-            <button
-              onClick={() => setShowNotifDrawer(true)}
-              className="group relative rounded-xl border border-theme-border bg-theme-card/30 p-2.5 text-theme-text hover:border-brand hover:bg-brand/10 transition-all duration-300"
-            >
-              <Bell className="h-5 w-5 transition-transform group-hover:rotate-12" />
-              {mounted && unreadNotifCount > 0 && (
-                <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-lg shadow-red-500/40">
-                  {unreadNotifCount}
-                </span>
-              )}
-            </button>
+
 
             {/* User / Auth Section */}
             {mounted ? (

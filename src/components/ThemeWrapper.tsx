@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useStore } from '../store/useStore';
+import ToastNotifications from './ToastNotifications';
 
 interface ThemeWrapperProps {
   children: React.ReactNode;
@@ -37,6 +38,7 @@ export default function ThemeWrapper({ children }: ThemeWrapperProps) {
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-500`}>
       {children}
+      <ToastNotifications />
     </div>
   );
 }

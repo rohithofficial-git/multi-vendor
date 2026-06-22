@@ -3,13 +3,16 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../../../store/useStore';
 import { useRouter } from 'next/navigation';
-import { 
-  Store, 
-  ArrowRight, 
+import {
+  Store,
+  ArrowRight,
   Mail,
+  Lock,
+  Eye,
+  EyeOff,
   Clock,
   AlertCircle,
-  Activity
+  Activity,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -18,6 +21,8 @@ export default function SellerLoginPage() {
   const { login, isAuthenticated, currentRole, initialize, sellers, requestSellerAccess } = useStore();
 
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [studioName, setStudioName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -38,11 +43,12 @@ export default function SellerLoginPage() {
   const handleSellerLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) { setError('Please enter your email'); return; }
+    if (!password.trim()) { setError('Please enter your password'); return; }
     setLoading(true);
     setError('');
 
-    // Check if this seller email is already approved
-    const existingSeller = sellers.find(s => 
+    // Check if this seller is pending or suspended (before checking password)
+    const existingSeller = sellers.find(s =>
       s.description?.includes(email) || s.studio_name.toLowerCase().includes(email.split('@')[0].toLowerCase())
     );
 
@@ -51,25 +57,31 @@ export default function SellerLoginPage() {
       setError('Your account is pending admin verification.');
       setLoading(false);
       return;
-    } 
+    }
 
     if (existingSeller && existingSeller.status === 'suspended') {
-      setError('Your account has been suspended.');
+      setError('Your account has been suspended. Contact support.');
       setLoading(false);
       return;
     }
 
-    // Auto-approve new sellers for preview convenience (handled in useStore)
     try {
-      const success = await login(email, 'seller');
+      const success = await login(email, password);
       if (success) {
-        window.location.href = '/seller';
+        const resolvedRole = useStore.getState().currentRole;
+        if (resolvedRole === 'admin') {
+          window.location.href = '/admin';
+        } else if (resolvedRole === 'seller') {
+          window.location.href = '/seller';
+        } else {
+          window.location.href = '/';
+        }
       } else {
-        setError('Login failed. Please try again.');
+        setError('Invalid email or password. Please try again.');
         setLoading(false);
       }
     } catch (err: any) {
-      setError(`Crash: ${err?.message || String(err)}`);
+      setError(`Auth error: ${err?.message || String(err)}`);
       setLoading(false);
     }
   };
@@ -106,14 +118,11 @@ export default function SellerLoginPage() {
               <Store className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-theme-text">
-                Studio Workspace
-              </h2>
-              <p className="text-[10px] text-theme-muted">
-                Sign in to manage your storefront & analytics
-              </p>
+              <h2 className="text-base font-bold text-theme-text">Studio Workspace</h2>
+              <p className="text-[10px] text-theme-muted">Sign in to manage your storefront & analytics</p>
             </div>
           </div>
+
 
           {error && (
             <div className="flex items-center space-x-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs">
@@ -124,6 +133,7 @@ export default function SellerLoginPage() {
 
           {!pendingVerification ? (
             <form onSubmit={handleSellerLogin} className="space-y-4">
+              {/* Email */}
               <div className="space-y-1.5">
                 <label className="text-[10px] uppercase font-bold text-theme-muted tracking-wider">Business Email</label>
                 <div className="relative">
@@ -138,13 +148,47 @@ export default function SellerLoginPage() {
                   />
                 </div>
               </div>
+
+              {/* Password */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] uppercase font-bold text-theme-muted tracking-wider">Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme-muted/50" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    autoComplete="new-password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full rounded-xl border border-theme-border bg-theme-bg-from/50 pl-10 pr-11 py-3 text-sm text-theme-text placeholder-theme-muted/50 outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted hover:text-theme-text transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full rounded-xl bg-brand text-white py-3 text-sm font-bold hover:bg-brand-hover transition-colors disabled:opacity-50 shadow-lg shadow-brand/20 flex items-center justify-center gap-2"
               >
-                {loading ? 'Authenticating...' : 'Enter Studio'}
-                {!loading && <ArrowRight className="h-4 w-4" />}
+                {loading ? (
+                  <>
+                    <span className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                    Authenticating...
+                  </>
+                ) : (
+                  <>
+                    Enter Studio
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
               </button>
             </form>
           ) : (
@@ -200,6 +244,15 @@ export default function SellerLoginPage() {
               </button>
             </div>
           )}
+
+          <div className="mt-2 pt-4 border-t border-theme-border flex items-center justify-between">
+            <Link href="/login" className="text-xs text-theme-muted hover:text-brand transition-colors">
+              ← Buyer Login
+            </Link>
+            <Link href="/admin/login" className="text-xs text-theme-muted hover:text-brand transition-colors">
+              Admin Login →
+            </Link>
+          </div>
         </div>
       </div>
     </div>

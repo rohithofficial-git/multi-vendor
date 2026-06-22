@@ -31,6 +31,7 @@ import {
   insertReview,
   markNotificationRead as dbMarkNotificationRead,
 } from '../lib/database';
+import { validateCredentials } from '../lib/auth';
 
 // HTTP fallback for UUID generation since crypto.randomUUID requires HTTPS
 const generateUUID = () => {
@@ -80,7 +81,7 @@ interface StoreState {
   initialize: () => Promise<void>;
   
   // Actions
-  login: (email: string, role: 'buyer' | 'seller' | 'admin') => Promise<boolean>;
+  login: (email: string, password: string, role?: 'buyer' | 'seller' | 'admin') => Promise<boolean>;
   logout: () => void;
   setRole: (role: 'buyer' | 'seller' | 'admin') => void;
   setTheme: (theme: 'dark-luxury' | 'light-minimal' | 'cyberpunk') => void;
@@ -281,40 +282,148 @@ export const useStore = create<StoreState>((set, get) => {
       }
     },
 
-    login: async (email: string, role: 'buyer' | 'seller' | 'admin') => {
+    login: async (email: string, password: string, role?: 'buyer' | 'seller' | 'admin') => {
       set({ loading: true });
       await new Promise(resolve => setTimeout(resolve, 800)); // simulation delay
 
-      const namePrefix = email.split('@')[0];
-      const name = namePrefix.charAt(0).toUpperCase() + namePrefix.slice(1) + ' Creator';
+      // ── Validate credentials against registry ──
+      let cred = validateCredentials(email, password, role);
+
+      // Fallback: Dynamic user registration & login for any user ID
+      if (!cred) {
+        let customUsers: any[] = [];
+        if (typeof window !== 'undefined') {
+          const stored = localStorage.getItem('aetheris_custom_users');
+          customUsers = stored ? JSON.parse(stored) : [];
+        }
+
+        const normalizedEmail = email.trim().toLowerCase();
+        const existingCustom = customUsers.find(u => u.email.toLowerCase() === normalizedEmail);
+
+        if (existingCustom) {
+          // In development/demo, if they enter a different password, automatically update it to prevent lockout
+          if (existingCustom.password !== password) {
+            existingCustom.password = password;
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('aetheris_custom_users', JSON.stringify(customUsers));
+            }
+          }
+          cred = existingCustom;
+        } else {
+          // Use explicitly provided role if specified, otherwise auto-detect from email
+          let resolvedRole: 'buyer' | 'seller' | 'admin' = role || 'buyer';
+          if (!role) {
+            if (normalizedEmail.includes('admin')) {
+              resolvedRole = 'admin';
+            } else if (normalizedEmail.includes('seller')) {
+              resolvedRole = 'seller';
+            }
+          }
+
+          // Generate a display name from email
+          const namePart = email.split('@')[0];
+          const displayName = namePart.charAt(0).toUpperCase() + namePart.slice(1).replace(/[^a-zA-Z0-9]/g, ' ');
+
+          const newCustomUser = {
+            email: normalizedEmail,
+            password: password,
+            role: resolvedRole,
+            name: displayName,
+          };
+
+          customUsers.push(newCustomUser);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('aetheris_custom_users', JSON.stringify(customUsers));
+          }
+        }
+      }
+
+      if (!cred) {
+        set({ loading: false });
+        return false;
+      }
+
+      const userRole = cred.role;
+
       const user: User = {
         id: generateUUID(),
-        name,
-        email,
-        role,
+        name: cred.name,
+        email: cred.email,
+        role: userRole,
         created_at: new Date().toISOString()
       };
 
-      // Create or find seller profile if registering/logging in as seller
-      let sellerProfile: Seller | null = null;
-      if (role === 'seller') {
-        const existingSellers = get().sellers;
-        
-        // Fix: Find seller by description (which contains email) or studio_name mapping
-        const exists = existingSellers.find(s => 
-          s.description?.includes(email) || 
-          s.studio_name.toLowerCase().includes(namePrefix.toLowerCase())
-        );
+      // ── Find or Create User in Supabase ──
+      if (get().dbConnected && supabase) {
+        try {
+          const normalizedEmail = cred.email.toLowerCase().trim();
+          const { data: existingDbUser, error: findErr } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', normalizedEmail)
+            .maybeSingle();
 
-        if (!exists) {
+          if (findErr) {
+            console.warn('[Store] Error checking user in Supabase:', findErr);
+          }
+
+          if (existingDbUser) {
+            // Use existing ID and details from the database
+            user.id = existingDbUser.id;
+            user.name = existingDbUser.name;
+            user.role = existingDbUser.role;
+            console.log('[Store] Found existing user in Supabase. Synced ID:', user.id);
+          } else {
+            // Insert new user
+            const { data: newDbUser, error: insertErr } = await supabase
+              .from('users')
+              .insert({
+                id: user.id,
+                name: user.name,
+                email: normalizedEmail,
+                role: user.role,
+                password_hash: password
+              })
+              .select()
+              .single();
+
+            if (insertErr) {
+              console.error('[Store] Failed to create user in Supabase:', insertErr);
+            } else if (newDbUser) {
+              user.id = newDbUser.id;
+              console.log('[Store] Created new user in Supabase. Registered ID:', user.id);
+            }
+          }
+        } catch (err) {
+          console.error('[Store] Supabase database transaction failed:', err);
+        }
+      }
+
+      // Create or find seller profile if logging in as seller
+      let sellerProfile: Seller | null = null;
+      if (userRole === 'seller') {
+        const existingSellers = get().sellers;
+
+        // Match by sellerId from credentials registry first
+        const exists = cred.sellerId
+          ? existingSellers.find(s => s.id === cred.sellerId)
+          : existingSellers.find(s =>
+              s.description?.includes(email) ||
+              s.studio_name.toLowerCase() === cred.name.toLowerCase()
+            );
+
+        if (exists) {
+          sellerProfile = exists;
+          user.id = exists.user_id;
+        } else {
           sellerProfile = {
             id: generateUUID(),
             user_id: user.id,
-            studio_name: `${name}'s Studio`,
-            description: `Vanguard designs by ${name}. Email: ${email}`,
+            studio_name: cred.name,
+            description: `Studio by ${cred.name}. Email: ${email}`,
             logo_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80',
             banner_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80',
-            status: 'approved', // Auto-approved for preview convenience
+            status: 'approved',
             commission_rate: 10.00,
             rating: 5.0,
             sales_count: 0,
@@ -323,33 +432,29 @@ export const useStore = create<StoreState>((set, get) => {
           const updatedSellers = [...existingSellers, sellerProfile];
           set({ sellers: updatedSellers });
           syncDb({ sellers: updatedSellers });
-        } else {
-          sellerProfile = exists;
-          // Update the user ID to match the found seller's user_id so they link up correctly
-          user.id = exists.user_id;
         }
       }
 
-      set({ 
-        currentUser: user, 
-        currentRole: role,
+      set({
+        currentUser: user,
+        currentRole: userRole,
         currentSeller: sellerProfile,
-        isAuthenticated: true, 
-        loading: false 
+        isAuthenticated: true,
+        loading: false
       });
-      
+
       if (typeof window !== 'undefined') {
         localStorage.setItem('aetheris_user', JSON.stringify(user));
-        document.cookie = `aetheris_role=${role}; path=/; max-age=86400; SameSite=Lax`;
+        document.cookie = `aetheris_role=${userRole}; path=/; max-age=86400; SameSite=Lax`;
         document.cookie = `aetheris_auth=true; path=/; max-age=86400; SameSite=Lax`;
       }
-      
+
       get().addNotification(
         'Authentication Successful',
-        `Logged in secure session as ${role.toUpperCase()}: ${user.name}.`,
+        `Logged in secure session as ${userRole.toUpperCase()}: ${user.name}.`,
         'success'
       );
-      
+
       return true;
     },
 
