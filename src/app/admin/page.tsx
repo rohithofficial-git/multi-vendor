@@ -35,11 +35,7 @@ export default function AdminControlCenter() {
   } = useStore();
 
   const cycleTheme = () => {
-    const themes: ('dark-luxury' | 'light-minimal' | 'cyberpunk')[] = [
-      'dark-luxury',
-      'light-minimal',
-      'cyberpunk'
-    ];
+    const themes: ('light' | 'dark')[] = ['light', 'dark'];
     const currentIndex = themes.indexOf(activeTheme);
     const nextIndex = (currentIndex + 1) % themes.length;
     setTheme(themes[nextIndex]);

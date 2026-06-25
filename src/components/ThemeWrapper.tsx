@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useStore } from '../store/useStore';
 import ToastNotifications from './ToastNotifications';
+import AiAssistant from './AiAssistant';
 
 interface ThemeWrapperProps {
   children: React.ReactNode;
@@ -25,9 +26,8 @@ export default function ThemeWrapper({ children }: ThemeWrapperProps) {
     
     // Remove existing themes
     document.documentElement.classList.remove(
-      'theme-dark-luxury',
-      'theme-light-minimal',
-      'theme-cyberpunk'
+      'theme-light',
+      'theme-dark'
     );
     
     // Add current theme
@@ -39,6 +39,7 @@ export default function ThemeWrapper({ children }: ThemeWrapperProps) {
     <div className={`min-h-screen flex flex-col transition-colors duration-500`}>
       {children}
       <ToastNotifications />
+      <AiAssistant />
     </div>
   );
 }

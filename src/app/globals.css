@@ -4,88 +4,88 @@
   --font-sans: var(--font-geist-sans), Inter, sans-serif;
   --font-display: var(--font-display), Poppins, sans-serif;
 
-  /* Default Theme: Dark Luxury */
-  --background-from: #030712;
-  --background-to: #0f172a;
-  --card-bg: rgba(15, 23, 42, 0.45);
-  --card-border: rgba(255, 255, 255, 0.05);
-  --text-main: #f3f4f6;
-  --text-muted: #9ca3af;
-  --color-primary: #d97706;
-  /* Warm Gold */
-  --color-primary-hover: #b45309;
-  --color-accent: #fbbf24;
-  --color-accent-glow: rgba(251, 191, 36, 0.15);
-  --color-success: #10b981;
-  --color-error: #ef4444;
+  /* Default Theme: Nike Mint Green E-Commerce Light */
+  --background-from: #ECF7F2; /* Pale mint green background */
+  --background-to: #F5FAF7;
+  --card-bg: #FFFFFF; /* Pure White card background */
+  --card-border: #E2EBE6; /* Mint-green border tint */
+  --text-main: #1A1C1A; /* Dark charcoal text */
+  --text-muted: #5C635F; /* Slate-green secondary text */
+  --color-primary: #0FA374; /* Nike Mint Green */
+  --color-primary-hover: #0C855E;
+  --color-accent: #0FA374;
+  --color-accent-glow: rgba(15, 163, 116, 0.12);
+  --color-success: #0FA374;
+  --color-error: #E03B3B;
+
+  /* Navbar Customizations */
+  --nav-bg: #ECF7F2; /* Clean pale mint green header background */
+  --nav-text: #1A1C1A;
+  --nav-muted: #5C635F;
+  --nav-border: #E2EBE6;
 }
 
-.theme-dark-luxury {
-  --background-from: #030712;
-  --background-to: #0f172a;
-  --card-bg: rgba(15, 23, 42, 0.45);
-  --card-border: rgba(255, 255, 255, 0.05);
-  --text-main: #f3f4f6;
-  --text-muted: #9ca3af;
-  --color-primary: #d97706;
-  --color-primary-hover: #b45309;
-  --color-accent: #fbbf24;
-  --color-accent-glow: rgba(251, 191, 36, 0.15);
+.theme-light {
+  /* Nike Mint Green E-Commerce Light Theme */
+  --background-from: #ECF7F2;
+  --background-to: #F5FAF7;
+  --card-bg: #FFFFFF;
+  --card-border: #E2EBE6;
+  --text-main: #1A1C1A;
+  --text-muted: #5C635F;
+  --color-primary: #0FA374;
+  --color-primary-hover: #0C855E;
+  --color-accent: #0FA374;
+  --color-accent-glow: rgba(15, 163, 116, 0.12);
+  --color-success: #0FA374;
+  --color-error: #E03B3B;
+
+  --nav-bg: #ECF7F2;
+  --nav-text: #1A1C1A;
+  --nav-muted: #5C635F;
+  --nav-border: #E2EBE6;
 }
 
-.theme-light-minimal {
-  --background-from: #ffffff;
-  --background-to: #f1f5f9;
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --card-border: rgba(0, 0, 0, 0.08);
-  --text-main: #020617;
-  --text-muted: #64748b;
-  --color-primary: #3b82f6;
-  --color-primary-hover: #2563eb;
-  --color-accent: #60a5fa;
-  --color-accent-glow: rgba(59, 130, 246, 0.15);
+.theme-dark {
+  /* Nike 2022 Collections E-Commerce Dark Theme */
+  --background-from: #09091E; /* Deep midnight blue background */
+  --background-to: #050510;
+  --card-bg: #12122B; /* Deep space card background */
+  --card-border: rgba(56, 189, 248, 0.15); /* Sky blue border outline */
+  --text-main: #FFFFFF; /* Bright white text */
+  --text-muted: #8E9BB4; /* Slate-blue muted text */
+  --color-primary: #0EA5E9; /* Vibrant Sky Blue */
+  --color-primary-hover: #0284C7;
+  --color-accent: #A855F7; /* Vibrant Purple/Violet */
+  --color-accent-glow: rgba(56, 189, 248, 0.25);
+  --color-success: #10B981;
+  --color-error: #EF4444;
+
+  --nav-bg: #09091E;
+  --nav-text: #FFFFFF;
+  --nav-muted: #8E9BB4;
+  --nav-border: rgba(56, 189, 248, 0.15);
 }
 
-.theme-cyberpunk {
-  --background-from: #080313;
-  --background-to: #17072d;
-  --card-bg: rgba(23, 7, 45, 0.5);
-  --card-border: rgba(236, 72, 153, 0.15);
-  --text-main: #faf5ff;
-  --text-muted: #d8b4fe;
-  --color-primary: #ec4899;
-  --color-primary-hover: #db2777;
-  --color-accent: #06b6d4;
-  --color-accent-glow: rgba(6, 182, 212, 0.25);
-}
-
-/* Light mode overrides if user flips native tailwind dark mode, but we build on beautiful dark luxury styles */
+/* Light mode overrides if user flips native tailwind dark mode */
 .light-mode {
-  --background-from: #f8fafc;
-  --background-to: #e2e8f0;
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --card-border: rgba(0, 0, 0, 0.05);
-  --text-main: #0f172a;
-  --text-muted: #475569;
-  --color-primary: #6366f1;
-  /* Neon Purple */
-  --color-primary-hover: #4f46e5;
-  --color-accent: #4338ca;
-  --color-accent-glow: rgba(99, 102, 241, 0.1);
-}
+  --background-from: #ECF7F2;
+  --background-to: #F5FAF7;
+  --card-bg: #FFFFFF;
+  --card-border: #E2EBE6;
+  --text-main: #1A1C1A;
+  --text-muted: #5C635F;
+  --color-primary: #0FA374;
+  --color-primary-hover: #0C855E;
+  --color-accent: #0FA374;
+  --color-accent-glow: rgba(15, 163, 116, 0.12);
+  --color-success: #0FA374;
+  --color-error: #E03B3B;
 
-/* Seller workspace light theme — clean, professional, readable */
-.seller-light-theme {
-  --background-from: #f1f5f9;
-  --background-to: #e2e8f0;
-  --card-bg: rgba(255, 255, 255, 0.92);
-  --card-border: rgba(0, 0, 0, 0.08);
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --color-primary: #4f46e5;
-  --color-primary-hover: #4338ca;
-  --color-accent: #06b6d4;
-  --color-accent-glow: rgba(79, 70, 229, 0.08);
+  --nav-bg: #ECF7F2;
+  --nav-text: #1A1C1A;
+  --nav-muted: #5C635F;
+  --nav-border: #E2EBE6;
 }
 
 @theme {
@@ -101,6 +101,11 @@
   --color-theme-muted: var(--text-muted);
   --color-theme-success: var(--color-success);
   --color-theme-error: var(--color-error);
+
+  --color-theme-nav-bg: var(--nav-bg);
+  --color-theme-nav-text: var(--nav-text);
+  --color-theme-nav-border: var(--nav-border);
+  --color-theme-nav-muted: var(--nav-muted);
 }
 
 body {
@@ -143,6 +148,13 @@ body {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--card-border);
+}
+
+/* Outlined Typography utility */
+.text-outline-white {
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.45);
+  color: transparent;
+  text-shadow: none;
 }
 
 /* Neon Glow Effect */

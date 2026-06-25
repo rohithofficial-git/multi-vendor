@@ -432,6 +432,462 @@ export const INITIAL_PRODUCTS: Product[] = [
     average_rating: 4.7,
     reviews_count: 18,
     created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-watch-3',
+    seller_id: 'sel-1',
+    seller_name: 'Aetheris Labs',
+    title: 'Aetheris Tourbillon Skeleton Clock',
+    description: 'A striking mechanical mantelpiece clock showcasing a suspended tourbillon assembly and manual winding logs.',
+    price: 1450,
+    compare_at_price: 1650,
+    category: 'Acoustics & Time',
+    images: [
+      'https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 4,
+    status: 'active',
+    specs: { 'Movement': 'Tourbillon Manual', 'Reserve': '7 Days' },
+    variants: {},
+    average_rating: 4.9,
+    reviews_count: 8,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-audio-1',
+    seller_id: 'sel-1',
+    seller_name: 'Aetheris Labs',
+    title: 'Beryllium Audiophile Headphones',
+    description: 'High-fidelity open-back headphones engineered with pure beryllium diaphragms for unmatched transient clarity.',
+    price: 599,
+    compare_at_price: 699,
+    category: 'Acoustics & Time',
+    images: [
+      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 15,
+    status: 'active',
+    specs: { 'Driver': '40mm Beryllium', 'Impedance': '32 Ohm' },
+    variants: { 'Earpads': ['Suede', 'Sheepskin Leather'] },
+    average_rating: 4.8,
+    reviews_count: 32,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-audio-2',
+    seller_id: 'sel-1',
+    seller_name: 'Aetheris Labs',
+    title: 'Levitational Soundstage Speaker',
+    description: 'An omnidirectional speaker sphere suspended on an electromagnetic base, delivering resonance-free acoustic isolation.',
+    price: 899,
+    category: 'Acoustics & Time',
+    images: [
+      'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 8,
+    status: 'active',
+    specs: { 'Driver': '3" Planar Magnetic', 'Base Power': '60W' },
+    variants: {},
+    average_rating: 4.7,
+    reviews_count: 14,
+    is_ai_recommended: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-living-1',
+    seller_id: 'sel-2',
+    seller_name: 'Lumina Craft',
+    title: 'Ambient Smart Light Column',
+    description: 'A sculptural light cylinder displaying dynamic, HSL-tailored colors and interactive flow routines.',
+    price: 240,
+    compare_at_price: 280,
+    category: 'Vanguard Living',
+    images: [
+      'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 22,
+    status: 'active',
+    specs: { 'Height': '120cm', 'Luminance': '1800 lm' },
+    variants: { 'Finish': ['Anodized Black', 'Brushed Silver'] },
+    average_rating: 4.6,
+    reviews_count: 27,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-living-2',
+    seller_id: 'sel-2',
+    seller_name: 'Lumina Craft',
+    title: 'Hydroponic Indoor Garden',
+    description: 'A sleek self-watering smart garden with tailored LED arrays for growing gourmet herbs inside your kitchen.',
+    price: 350,
+    category: 'Vanguard Living',
+    images: [
+      'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 14,
+    status: 'active',
+    specs: { 'Pods': '9 Pod System', 'Tank Size': '4.5L' },
+    variants: {},
+    average_rating: 4.5,
+    reviews_count: 19,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-living-3',
+    seller_id: 'sel-2',
+    seller_name: 'Lumina Craft',
+    title: 'Modular Magnetic Desk Organizer',
+    description: 'A solid oak base with magnetic repositionable accessories for clean utility management on your workspace.',
+    price: 110,
+    category: 'Vanguard Living',
+    images: [
+      'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 50,
+    status: 'active',
+    specs: { 'Material': 'Solid Oak & Steel', 'Modules': '6 Magnetic Blocks' },
+    variants: { 'Timber': ['Natural Oak', 'Dark Walnut'] },
+    average_rating: 4.8,
+    reviews_count: 65,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-living-4',
+    seller_id: 'sel-2',
+    seller_name: 'Lumina Craft',
+    title: 'Ergonomic Levitation Desk Chair',
+    description: 'High-performance workspace seating utilizing elastic mesh webbing and a floating suspension system.',
+    price: 1200,
+    compare_at_price: 1400,
+    category: 'Vanguard Living',
+    images: [
+      'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 6,
+    status: 'active',
+    specs: { 'Support': 'Dynamic Lumbar', 'Frame': 'Cast Aluminum' },
+    variants: {},
+    average_rating: 4.9,
+    reviews_count: 12,
+    is_ai_recommended: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-gear-1',
+    seller_id: 'sel-3',
+    seller_name: 'Veloce Dynamics',
+    title: 'Commuter Carbon Helmet',
+    description: 'Forged carbon shell helmet with integrated smart lights and turn signals for modern urban mobility safety.',
+    price: 199,
+    compare_at_price: 249,
+    category: 'Mobility & Gear',
+    images: [
+      'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 30,
+    status: 'active',
+    specs: { 'Safety Cert': 'CPSC & EN1078', 'Battery Life': '10 Hours' },
+    variants: { 'Size': ['M', 'L'] },
+    average_rating: 4.7,
+    reviews_count: 44,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-gear-2',
+    seller_id: 'sel-3',
+    seller_name: 'Veloce Dynamics',
+    title: 'Electric Hub-Motor Longboard',
+    description: 'Dual 600W hub-motor longboard with regenerative braking and carbon fiber decks for fast urban transit.',
+    price: 799,
+    category: 'Mobility & Gear',
+    images: [
+      'https://images.unsplash.com/photo-1547447134-cd3f5c716030?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 11,
+    status: 'active',
+    specs: { 'Top Speed': '38 km/h', 'Range': '25 km' },
+    variants: {},
+    average_rating: 4.6,
+    reviews_count: 23,
+    is_ai_recommended: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-gear-3',
+    seller_id: 'sel-3',
+    seller_name: 'Veloce Dynamics',
+    title: 'Hybrid Technical Backpack',
+    description: 'Weatherproof heavy-duty commuter backpack with shock-absorbing compartments for professional hardware transit.',
+    price: 260,
+    category: 'Mobility & Gear',
+    images: [
+      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 45,
+    status: 'active',
+    specs: { 'Volume': '28L', 'Waterproof Rating': 'IPX6' },
+    variants: { 'Color': ['Matte Stealth Black', 'Slate Grey'] },
+    average_rating: 4.8,
+    reviews_count: 51,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-apparel-1',
+    seller_id: 'sel-4',
+    seller_name: 'Nebula Fabrics',
+    title: 'Waterproof Technical Trenchcoat',
+    description: 'Modern long-cut outer layer utilizing climate-modulating nanofibres with heat-sealed seams.',
+    price: 420,
+    compare_at_price: 480,
+    category: 'Apparel & Style',
+    images: [
+      'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 18,
+    status: 'active',
+    specs: { 'Fabric': 'Nebula Shield 3L', 'Weight': '450g' },
+    variants: { 'Size': ['S', 'M', 'L', 'XL'] },
+    average_rating: 4.9,
+    reviews_count: 15,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-apparel-2',
+    seller_id: 'sel-4',
+    seller_name: 'Nebula Fabrics',
+    title: 'Merino Wool Base Layer',
+    description: 'Ultra-fine merino wool long-sleeve knit layer offering natural temperature regulation and odor control.',
+    price: 110,
+    category: 'Apparel & Style',
+    images: [
+      'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 60,
+    status: 'active',
+    specs: { 'Fiber': '100% Merino 18.5 Micron', 'Knit Weight': '200g/m²' },
+    variants: { 'Size': ['M', 'L', 'XL'] },
+    average_rating: 4.7,
+    reviews_count: 28,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-apparel-3',
+    seller_id: 'sel-4',
+    seller_name: 'Nebula Fabrics',
+    title: 'Forged Carbon Fiber Wallet',
+    description: 'Minimalist RFID-blocking card holder engineered with aerospace forged carbon plates and cash straps.',
+    price: 125,
+    category: 'Apparel & Style',
+    images: [
+      'https://images.unsplash.com/photo-1627124765135-56c2c7790404?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 120,
+    status: 'active',
+    specs: { 'Material': 'Forged Carbon & Titanium', 'Card Capacity': 'Up to 12 Cards' },
+    variants: {},
+    average_rating: 4.8,
+    reviews_count: 88,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-vault-1',
+    seller_id: 'sel-1',
+    seller_name: 'Aetheris Labs',
+    title: 'Aetheris Carbon Smart Watch (Elite Edition)',
+    description: 'Bespoke forged carbon smartwatch run featuring standard cellular sync, AMOLED screen, and custom biosensing software.',
+    price: 329,
+    compare_at_price: 399,
+    category: 'Acoustics & Time',
+    images: [
+      'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 3,
+    status: 'active',
+    specs: { 'Casing': 'Forged Carbon', 'Battery': '14 Days' },
+    variants: {},
+    average_rating: 4.9,
+    reviews_count: 420,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-vault-2',
+    seller_id: 'sel-1',
+    seller_name: 'Aetheris Labs',
+    title: 'Soundstage Acoustics Levitation Base',
+    description: 'An electromagnetic levitating platform for speakers, ensuring zero physical floor vibration and acoustic purification.',
+    price: 499,
+    compare_at_price: 690,
+    category: 'Acoustics & Time',
+    images: [
+      'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 2,
+    status: 'active',
+    specs: { 'Suspension': 'Magnetic Levitation', 'Max Load': '5kg' },
+    variants: {},
+    average_rating: 4.8,
+    reviews_count: 15,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-vault-3',
+    seller_id: 'sel-2',
+    seller_name: 'Lumina Craft',
+    title: 'Vintage Camera Darkroom Set',
+    description: 'Complete vintage camera bundle including custom leather carrying case, tripods, and analog lens elements.',
+    price: 280,
+    compare_at_price: 450,
+    category: 'Vanguard Living',
+    images: [
+      'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 4,
+    status: 'active',
+    specs: { 'Includes': 'Camera, Tripod, Bag', 'Lens': '50mm + 35mm' },
+    variants: {},
+    average_rating: 4.9,
+    reviews_count: 24,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-vault-4',
+    seller_id: 'sel-1',
+    seller_name: 'Aetheris Labs',
+    title: 'Planar Magnetic In-Ear Monitors',
+    description: 'Bespoke high-end IEM earphones with planar magnetic drivers, solid metal casings, and silver-plated copper cabling.',
+    price: 180,
+    compare_at_price: 299,
+    category: 'Acoustics & Time',
+    images: [
+      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 5,
+    status: 'active',
+    specs: { 'Driver': '10mm Planar', 'Cable': '8-Core Silver Plated' },
+    variants: {},
+    average_rating: 4.7,
+    reviews_count: 38,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-vault-5',
+    seller_id: 'sel-2',
+    seller_name: 'Lumina Craft',
+    title: 'Levitating Smart Desk Clock',
+    description: 'A floating numeric clock sphere that rotates silently and updates sync using wireless local network logs.',
+    price: 199,
+    compare_at_price: 350,
+    category: 'Vanguard Living',
+    images: [
+      'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 3,
+    status: 'active',
+    specs: { 'Feature': 'Levitating Sphere', 'Sync': 'Wi-Fi' },
+    variants: {},
+    average_rating: 4.8,
+    reviews_count: 12,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-vault-6',
+    seller_id: 'sel-3',
+    seller_name: 'Veloce Dynamics',
+    title: 'Forged Carbon Commuter E-Bike',
+    description: 'Aerospace forged carbon frame folding e-bike with silent hub motor and long range battery integration.',
+    price: 1850,
+    compare_at_price: 2450,
+    category: 'Mobility & Gear',
+    images: [
+      'https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 2,
+    status: 'active',
+    specs: { 'Frame': 'Forged Carbon', 'Range': '80km' },
+    variants: {},
+    average_rating: 4.9,
+    reviews_count: 7,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-vault-7',
+    seller_id: 'sel-4',
+    seller_name: 'Nebula Fabrics',
+    title: 'Aerodynamic Windbreaker (Alpha V2)',
+    description: 'Technical running windbreaker offering waterproof nanofibre layers and laser-perforated thermal venting panels.',
+    price: 190,
+    compare_at_price: 299,
+    category: 'Apparel & Style',
+    images: [
+      'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 8,
+    status: 'active',
+    specs: { 'Ventilation': 'Laser Vent', 'Weight': '180g' },
+    variants: {},
+    average_rating: 4.6,
+    reviews_count: 19,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-vault-8',
+    seller_id: 'sel-1',
+    seller_name: 'Aetheris Labs',
+    title: 'Beryllium Core Studio Subwoofer',
+    description: 'Active studio subwoofer packing a custom beryllium transducer and solid aluminum anti-vibration framing.',
+    price: 750,
+    compare_at_price: 1100,
+    category: 'Acoustics & Time',
+    images: [
+      'https://images.unsplash.com/photo-1594623930572-300a3011d9ae?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 2,
+    status: 'active',
+    specs: { 'Power': '300W RMS', 'Response': '18Hz - 120Hz' },
+    variants: {},
+    average_rating: 4.9,
+    reviews_count: 16,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-vault-9',
+    seller_id: 'sel-2',
+    seller_name: 'Lumina Craft',
+    title: 'Solid Teak Levitating Organizer',
+    description: 'Sculptural desk organizer that floats over magnetic arrays, keeping office tools elevated and accessible.',
+    price: 140,
+    compare_at_price: 220,
+    category: 'Vanguard Living',
+    images: [
+      'https://images.unsplash.com/photo-1578500494198-246f612d3b3d?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 6,
+    status: 'active',
+    specs: { 'Material': 'Solid Teak Wood', 'Base': 'Gloss Black' },
+    variants: {},
+    average_rating: 4.7,
+    reviews_count: 9,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'prod-vault-10',
+    seller_id: 'sel-3',
+    seller_name: 'Veloce Dynamics',
+    title: 'Aerospace Titanium Sunglasses',
+    description: 'Polarized urban sunglasses handcrafted with pure beta-titanium wire frames and carbon shock joints.',
+    price: 210,
+    compare_at_price: 380,
+    category: 'Mobility & Gear',
+    images: [
+      'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=800&auto=format&fit=crop&q=80'
+    ],
+    inventory: 15,
+    status: 'active',
+    specs: { 'Frame': 'Pure Beta-Titanium', 'Lens': 'Polarized TAC' },
+    variants: {},
+    average_rating: 4.8,
+    reviews_count: 53,
+    created_at: new Date().toISOString()
   }
 ];
 

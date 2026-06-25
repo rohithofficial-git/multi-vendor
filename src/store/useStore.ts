@@ -69,7 +69,7 @@ interface StoreState {
   // User Actions (Client State)
   cart: CartItem[];
   wishlist: string[]; // product IDs
-  activeTheme: 'dark-luxury' | 'light-minimal' | 'cyberpunk';
+  activeTheme: 'light' | 'dark';
   
   // Loading & UI
   loading: boolean;
@@ -84,7 +84,7 @@ interface StoreState {
   login: (email: string, password: string, role?: 'buyer' | 'seller' | 'admin') => Promise<boolean>;
   logout: () => void;
   setRole: (role: 'buyer' | 'seller' | 'admin') => void;
-  setTheme: (theme: 'dark-luxury' | 'light-minimal' | 'cyberpunk') => void;
+  setTheme: (theme: 'light' | 'dark') => void;
   
   // Cart Actions
   addToCart: (productId: string, quantity?: number, variant?: string) => void;
@@ -168,7 +168,7 @@ export const useStore = create<StoreState>((set, get) => {
 
   const initialCart = getLocalStorageItem<CartItem[]>('cart', []);
   const initialWishlist = getLocalStorageItem<string[]>('wishlist', []);
-  const initialTheme = getLocalStorageItem<'dark-luxury' | 'light-minimal' | 'cyberpunk'>('theme', 'dark-luxury');
+  const initialTheme = getLocalStorageItem<'light' | 'dark'>('theme', 'light');
 
   // Find matching seller profile if current user is seller
   const getSellerProfile = (userId: string, sellerList: Seller[]): Seller | null => {
@@ -219,6 +219,14 @@ export const useStore = create<StoreState>((set, get) => {
       if (!connected) {
         console.log('[Store] No Supabase connection — using localStorage fallback');
         
+        // Sync any new initial products that might not be in the mock DB or localStorage cache
+        const cachedProducts = mockDb.products;
+        const missingProducts = INITIAL_PRODUCTS.filter(p => !cachedProducts.some(cp => cp.id === p.id));
+        if (missingProducts.length > 0) {
+          console.log(`[Store] Syncing ${missingProducts.length} missing initial products to mockDb`);
+          mockDb.products = [...cachedProducts, ...missingProducts];
+        }
+
         const mockData = {
           products: mockDb.products,
           sellers: mockDb.sellers,
@@ -252,10 +260,18 @@ export const useStore = create<StoreState>((set, get) => {
           authState.currentSeller = getSellerProfile(authState.currentUser.id, sellers);
         }
 
+        // Heal products list with any missing INITIAL_PRODUCTS
+        const mergedProducts = [...products];
+        INITIAL_PRODUCTS.forEach(ip => {
+          if (!mergedProducts.some(p => p.id === ip.id)) {
+            mergedProducts.push(ip);
+          }
+        });
+
         const currentStore = get();
         if (currentStore.isAuthenticated) {
           set({
-            products,
+            products: mergedProducts,
             sellers,
             orders,
             reviews,
@@ -265,7 +281,7 @@ export const useStore = create<StoreState>((set, get) => {
           });
         } else {
           set({
-            products,
+            products: mergedProducts,
             sellers,
             orders,
             reviews,
@@ -539,7 +555,14 @@ export const useStore = create<StoreState>((set, get) => {
       set({ cart });
       setLocalStorageItem('cart', cart);
       
-      const product = get().products.find(p => p.id === productId);
+      let product = get().products.find(p => p.id === productId);
+      if (!product) {
+        product = INITIAL_PRODUCTS.find(p => p.id === productId);
+        if (product) {
+          set({ products: [...get().products, product] });
+        }
+      }
+
       if (product) {
         get().addNotification(
           'Added to Bag',

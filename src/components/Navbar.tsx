@@ -19,7 +19,8 @@ import {
   Store,
   ShieldCheck,
   Check,
-  Glasses
+  Glasses,
+  Zap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -81,11 +82,7 @@ export default function Navbar() {
   const unreadNotifCount = notifications.filter(n => !n.read).length;
 
   const cycleTheme = () => {
-    const themes: ('dark-luxury' | 'light-minimal' | 'cyberpunk')[] = [
-      'dark-luxury',
-      'light-minimal',
-      'cyberpunk'
-    ];
+    const themes: ('light' | 'dark')[] = ['light', 'dark'];
     const currentIndex = themes.indexOf(activeTheme);
     const nextIndex = (currentIndex + 1) % themes.length;
     setTheme(themes[nextIndex]);
@@ -102,7 +99,7 @@ export default function Navbar() {
   return (
     <>
       {/* Sticky Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-theme-border bg-theme-bg-from/70 backdrop-blur-md transition-all duration-300">
+      <header className="sticky top-0 z-40 w-full border-b border-theme-nav-border bg-theme-nav-bg/95 backdrop-blur-md transition-all duration-300">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
           {/* Logo */}
@@ -114,14 +111,14 @@ export default function Navbar() {
             >
               <Layers className="h-5 w-5 text-white" />
             </motion.div>
-            <span className="font-display text-xl font-bold tracking-wider text-theme-text sm:text-2xl">
+            <span className="font-display text-xl font-bold tracking-wider text-theme-nav-text sm:text-2xl">
               ELITEhub<span className="text-brand">.</span>
             </span>
           </Link>
 
           {/* Search bar - Desktop */}
           <div ref={searchRef} className="relative hidden max-w-md flex-1 px-8 md:block">
-            <form onSubmit={handleSearchSubmit} className="relative">
+            <form onSubmit={handleSearchSubmit} className="relative flex items-center">
               <input
                 type="text"
                 placeholder="Ask AI or search artifacts..."
@@ -131,9 +128,15 @@ export default function Navbar() {
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
-                className="w-full rounded-full border border-theme-border bg-theme-card/30 py-2.5 pl-11 pr-4 text-sm text-theme-text placeholder-theme-muted/50 outline-none transition-all focus:border-brand focus:bg-theme-card/60 focus:ring-1 focus:ring-brand"
+                className="w-full rounded-full border border-theme-nav-border bg-white py-2 px-11 pr-12 text-sm text-gray-900 placeholder-gray-500 outline-none transition-all focus:ring-2 focus:ring-brand"
               />
-              <Search className="absolute left-4 top-3 h-4 w-4 text-theme-muted/60" />
+              <Search className="absolute left-4 top-2.5 h-4 w-4 text-gray-400" />
+              <button
+                type="submit"
+                className="absolute right-0 top-0 bottom-0 px-4 rounded-r-full bg-brand text-white hover:bg-brand-hover flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <Search className="h-4 w-4" />
+              </button>
             </form>
 
             {/* Suggestions Dropdown */}
@@ -143,7 +146,7 @@ export default function Navbar() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute left-8 right-8 mt-2 overflow-hidden rounded-2xl border border-theme-border bg-theme-bg-from/95 p-2 shadow-2xl backdrop-blur-lg"
+                  className="absolute left-8 right-8 mt-2 overflow-hidden rounded-2xl border border-theme-border bg-theme-card p-2 shadow-2xl backdrop-blur-lg"
                 >
                   {suggestions.length > 0 ? (
                     <div>
@@ -195,10 +198,19 @@ export default function Navbar() {
           {/* Right Action Icons - Desktop */}
           <div className="hidden items-center space-x-4 md:flex">
 
+            {/* Vault Offers Link */}
+            <Link
+              href="/vault-offers"
+              className="group relative rounded-xl border border-amber-500/20 bg-amber-500/5 px-4 py-2 text-xs font-bold text-amber-500 hover:border-amber-500 hover:bg-amber-500/10 transition-all duration-300 flex items-center shadow-sm shadow-amber-500/5 hover:shadow-amber-500/15"
+              title="Quick Sale Offers"
+            >
+              <span>Quick Sale</span>
+            </Link>
+
             {/* Theme Cycle brush */}
             <button
               onClick={cycleTheme}
-              className="group relative rounded-xl border border-theme-border bg-theme-card/30 p-2.5 text-theme-text hover:border-brand hover:bg-brand/10 transition-all duration-300"
+              className="group relative rounded-xl border border-theme-nav-border bg-theme-card/50 p-2.5 text-theme-nav-text hover:border-brand hover:bg-theme-card transition-all duration-300"
               title="Cycle Accent Palette"
             >
               <Paintbrush className="h-5 w-5 transition-transform group-hover:rotate-12" />
@@ -209,7 +221,7 @@ export default function Navbar() {
             {/* Wishlist Link */}
             <Link
               href="/products?filter=wishlist"
-              className="group relative rounded-xl border border-theme-border bg-theme-card/30 p-2.5 text-theme-text hover:border-brand hover:bg-brand/10 transition-all duration-300"
+              className="group relative rounded-xl border border-theme-nav-border bg-theme-card/50 p-2.5 text-theme-nav-text hover:border-brand hover:bg-theme-card transition-all duration-300"
             >
               <Heart className="h-5 w-5 transition-transform group-hover:scale-110" />
               {mounted && wishlistCount > 0 && (
@@ -222,7 +234,7 @@ export default function Navbar() {
             {/* Cart Link */}
             <Link
               href="/cart"
-              className="group relative rounded-xl border border-theme-border bg-theme-card/30 p-2.5 text-theme-text hover:border-brand hover:bg-brand/10 transition-all duration-300"
+              className="group relative rounded-xl border border-theme-nav-border bg-theme-card/50 p-2.5 text-theme-nav-text hover:border-brand hover:bg-theme-card transition-all duration-300"
             >
               <ShoppingBag className="h-5 w-5 transition-transform group-hover:scale-110" />
               {mounted && cartCount > 0 && (
@@ -240,7 +252,7 @@ export default function Navbar() {
                 <div ref={roleRef} className="relative">
                   <button
                     onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-                    className="flex items-center space-x-2 rounded-xl border border-theme-border bg-theme-card/40 px-4 py-2.5 text-sm font-semibold hover:border-brand hover:bg-brand/5 transition-all"
+                    className="flex items-center space-x-2 rounded-xl border border-theme-nav-border bg-theme-card/50 px-4 py-2.5 text-sm font-semibold text-theme-nav-text hover:border-brand hover:bg-theme-card transition-all"
                   >
                     <span className="truncate max-w-[120px]">{currentUser.name}</span>
                     <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${showRoleDropdown ? 'rotate-180' : ''}`} />
@@ -252,7 +264,7 @@ export default function Navbar() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute right-0 mt-2 w-52 overflow-hidden rounded-2xl border border-theme-border bg-theme-bg-from/95 p-1 shadow-2xl backdrop-blur-lg z-50"
+                      className="absolute right-0 mt-2 w-52 overflow-hidden rounded-2xl border border-theme-border bg-theme-card p-1 shadow-2xl backdrop-blur-lg z-50"
                     >
                       <div className="px-3 py-2 border-b border-theme-border mb-1">
                         <p className="text-xs font-bold text-theme-text truncate">{currentUser.name}</p>
@@ -290,13 +302,13 @@ export default function Navbar() {
           <div className="flex items-center space-x-3 md:hidden">
             <button
               onClick={cycleTheme}
-              className="rounded-xl border border-theme-border bg-theme-card/30 p-2.5 text-theme-text"
+              className="rounded-xl border border-theme-nav-border bg-theme-card/50 p-2.5 text-theme-nav-text hover:bg-theme-card"
             >
               <Paintbrush className="h-5 w-5" />
             </button>
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="rounded-xl border border-theme-border bg-theme-card/30 p-2.5 text-theme-text"
+              className="rounded-xl border border-theme-nav-border bg-theme-card/50 p-2.5 text-theme-nav-text hover:bg-theme-card"
             >
               {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -312,53 +324,153 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-b border-theme-border bg-theme-bg-from/95 backdrop-blur-lg md:hidden z-30 relative overflow-hidden"
+            className="border-b border-theme-border bg-theme-card backdrop-blur-lg md:hidden z-30 relative overflow-hidden"
           >
-            <div className="px-4 py-6 space-y-4">
+            <div className="px-4 py-6 space-y-5">
               <form onSubmit={handleSearchSubmit} className="relative">
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="Ask AI or search products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-full border border-theme-border bg-theme-card/45 py-2.5 pl-11 pr-4 text-sm outline-none focus:border-brand"
+                  className="w-full rounded-full border border-theme-border bg-white py-2.5 pl-11 pr-4 text-sm outline-none text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-brand"
                 />
-                <Search className="absolute left-4 top-3.5 h-4 w-4 text-theme-muted/50" />
+                <Search className="absolute left-4 top-3.5 h-4 w-4 text-gray-400" />
               </form>
 
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              {/* Navigation Links Vertical Stack */}
+              <div className="flex flex-col space-y-1">
                 <Link
                   href="/products"
                   onClick={() => setShowMobileMenu(false)}
-                  className="flex items-center justify-center space-x-2 rounded-xl border border-theme-border bg-theme-card/20 py-3 text-sm text-theme-text"
+                  className="flex items-center space-x-3 rounded-xl px-4 py-3 text-sm text-theme-text hover:bg-brand/10 transition-colors"
                 >
-                  <Store className="h-4 w-4 text-brand" />
-                  <span>Browse Shop</span>
+                  <Store className="h-5 w-5 text-brand" />
+                  <span className="font-semibold">Browse Shop Catalog</span>
                 </Link>
-                <div className="border-t border-theme-border pt-4">
+
+                <Link
+                  href="/vault-offers"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center space-x-3 rounded-xl px-4 py-3 text-sm text-amber-500 bg-amber-500/5 hover:bg-amber-500/10 border border-amber-500/10 transition-colors"
+                >
+                  <Zap className="h-5 w-5" />
+                  <span className="font-semibold">Quick Sale Offers</span>
+                </Link>
+
                 <Link
                   href="/cart"
                   onClick={() => setShowMobileMenu(false)}
-                  className="flex items-center space-x-3 rounded-xl p-3 text-theme-text hover:bg-brand/10"
+                  className="flex items-center justify-between rounded-xl px-4 py-3 text-sm text-theme-text hover:bg-brand/10 transition-colors"
                 >
-                  <ShoppingBag className="h-5 w-5" />
-                  <span>Cart ({mounted ? cartCount : 0})</span>
+                  <div className="flex items-center space-x-3">
+                    <ShoppingBag className="h-5 w-5 text-brand" />
+                    <span className="font-semibold">Shopping Bag</span>
+                  </div>
+                  {mounted && cartCount > 0 && (
+                    <span className="bg-accent-color text-black text-xs font-bold px-2.5 py-0.5 rounded-full">
+                      {cartCount}
+                    </span>
+                  )}
                 </Link>
-              </div>
+
+                <Link
+                  href="/products?filter=wishlist"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center justify-between rounded-xl px-4 py-3 text-sm text-theme-text hover:bg-brand/10 transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Heart className="h-5 w-5 text-brand" />
+                    <span className="font-semibold">Your Wishlist</span>
+                  </div>
+                  {mounted && wishlistCount > 0 && (
+                    <span className="bg-brand text-white text-xs font-bold px-2.5 py-0.5 rounded-full">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </Link>
+                
+                {mounted && isAuthenticated && (
+                  <>
+                    <Link
+                      href="/seller"
+                      onClick={() => setShowMobileMenu(false)}
+                      className="flex items-center justify-between rounded-xl px-4 py-3 text-sm text-theme-text hover:bg-brand/10 transition-colors"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <Store className="h-5 w-5 text-purple-400" />
+                        <span className="font-semibold">Seller Studio Portal</span>
+                      </div>
+                      <span className="inline-block px-2 py-0.5 rounded-md bg-purple-400/20 text-[8px] text-purple-300 uppercase font-bold tracking-wider font-sans">
+                        Seller
+                      </span>
+                    </Link>
+
+                    {currentRole === 'admin' && (
+                      <Link
+                        href="/admin"
+                        onClick={() => setShowMobileMenu(false)}
+                        className="flex items-center justify-between rounded-xl px-4 py-3 text-sm text-theme-text hover:bg-brand/10 transition-colors"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <ShieldCheck className="h-5 w-5 text-amber-400" />
+                          <span className="font-semibold">Admin Panel Console</span>
+                        </div>
+                        <span className="inline-block px-2 py-0.5 rounded-md bg-amber-400/20 text-[8px] text-amber-300 uppercase font-bold tracking-wider font-sans">
+                          Admin
+                        </span>
+                      </Link>
+                    )}
+                  </>
+                )}
               </div>
 
-              {/* Mobile Auth Section */}
-              <div className="border-t border-theme-border pt-4 mt-2">
+              {/* Mobile Role Switcher (Vanguard Experience) */}
+              {mounted && isAuthenticated && currentUser && (
+                <div className="border-t border-theme-border pt-4 space-y-2">
+                  <span className="text-[10px] uppercase font-extrabold tracking-wider text-theme-muted px-4 block">Switch Workspace Context</span>
+                  <div className="grid grid-cols-3 gap-2 px-2">
+                    {(['buyer', 'seller', 'admin'] as const).map((role) => {
+                      const isActive = currentRole === role;
+                      return (
+                        <button
+                          key={role}
+                          onClick={() => {
+                            setRole(role);
+                            setShowMobileMenu(false);
+                            if (role === 'seller') router.push('/seller');
+                            else if (role === 'admin') router.push('/admin');
+                            else router.push('/');
+                          }}
+                          className={`py-2 rounded-xl text-center text-xs font-bold capitalize transition-all border ${
+                            isActive
+                              ? 'bg-brand/10 border-brand text-brand shadow-sm shadow-brand/15'
+                              : 'bg-theme-card/30 border-theme-border text-theme-muted hover:text-theme-text'
+                          }`}
+                        >
+                          {role}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Mobile Auth / Identity Box */}
+              <div className="border-t border-theme-border pt-4">
                 {mounted && isAuthenticated && currentUser ? (
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-3 rounded-xl border border-theme-border bg-theme-card/30 p-3">
+                    <div className="flex items-center space-x-3 rounded-2xl border border-theme-border bg-theme-card/30 p-3 mx-2">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand">
                         <User className="h-5 w-5" />
                       </div>
-                      <div className="flex-1 overflow-hidden">
-                        <p className="truncate text-sm font-bold text-theme-text">{currentUser.name}</p>
-                        <p className="truncate text-xs text-theme-muted">{currentUser.email}</p>
+                      <div className="flex-grow min-w-0">
+                        <p className="truncate text-xs font-extrabold text-theme-text">{currentUser.name}</p>
+                        <p className="truncate text-[10px] text-theme-muted">{currentUser.email}</p>
                       </div>
+                      <span className="shrink-0 text-[8px] bg-brand/10 text-brand px-2.5 py-0.5 rounded-full font-bold uppercase font-sans">
+                        {currentRole}
+                      </span>
                     </div>
                     <button
                       onClick={() => {
@@ -366,16 +478,16 @@ export default function Navbar() {
                         setShowMobileMenu(false);
                         router.push('/login');
                       }}
-                      className="w-full rounded-xl bg-red-500/10 py-3 text-sm font-bold text-red-500 hover:bg-red-500/20"
+                      className="w-full rounded-xl bg-red-500/10 py-3 text-xs font-bold text-red-400 hover:bg-red-500/20 transition-colors"
                     >
-                      Sign Out
+                      Sign Out Secure Session
                     </button>
                   </div>
                 ) : (
                   <Link
                     href="/login"
                     onClick={() => setShowMobileMenu(false)}
-                    className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-brand to-purple-600 py-3 text-sm font-bold text-white shadow-lg shadow-brand/20"
+                    className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-brand to-purple-600 py-3 text-xs font-bold text-white shadow-lg shadow-brand/20 hover:opacity-90 transition-opacity"
                   >
                     Sign In to ELITEhub
                   </Link>
@@ -404,7 +516,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed bottom-0 right-0 top-0 w-full sm:max-w-md border-l border-theme-border bg-theme-bg-from/95 p-6 shadow-2xl backdrop-blur-xl z-50 flex flex-col"
+              className="fixed bottom-0 right-0 top-0 w-full sm:max-w-md border-l border-theme-border bg-theme-card p-6 shadow-2xl backdrop-blur-xl z-50 flex flex-col"
             >
               <div className="flex items-center justify-between border-b border-theme-border pb-4">
                 <div className="flex items-center space-x-2">
@@ -487,6 +599,14 @@ export default function Navbar() {
         >
           <Store className="h-5 w-5" />
           <span className="text-[10px] mt-1">Shop</span>
+        </Link>
+        <Link
+          href="/vault-offers"
+          className={`flex flex-col items-center p-2 rounded-xl ${pathname === '/vault-offers' ? 'text-amber-500 font-semibold' : 'text-theme-muted'
+            }`}
+        >
+          <Zap className="h-5 w-5" />
+          <span className="text-[10px] mt-1">Quick Sale</span>
         </Link>
         <Link
           href="/cart"

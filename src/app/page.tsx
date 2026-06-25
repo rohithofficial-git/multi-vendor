@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import LimitedVaultOffer from '../components/LimitedVaultOffer';
 import { useStore } from '../store/useStore';
 import {
   ShoppingBag,
@@ -34,7 +35,8 @@ export default function LandingPage() {
     wishlist,
     toggleWishlist,
     currentRole,
-    setRole
+    setRole,
+    activeTheme
   } = useStore();
 
   // AI search helper state
@@ -44,13 +46,6 @@ export default function LandingPage() {
   
   const [mounted, setMounted] = useState(false);
   React.useEffect(() => setMounted(true), []);
-
-  // Chatbot state
-  const [showChatbot, setShowChatbot] = useState(false);
-  const [chatMessages, setChatMessages] = useState<Array<{ sender: 'user' | 'ai'; text: string }>>([
-    { sender: 'ai', text: 'Welcome to Aetheris Horizon. I am your concierge intelligence. Looking for artisan timepieces or acoustics?' }
-  ]);
-  const [userChatText, setUserChatText] = useState('');
 
   // Auto-get top rated / AI recommended products
   const aiRecommendedProducts = useMemo(() => {
@@ -83,35 +78,6 @@ export default function LandingPage() {
     }, 600);
   };
 
-  //concierge chatbot logic
-  const handleSendChatMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userChatText.trim()) return;
-
-    const userText = userChatText;
-    setChatMessages(prev => [...prev, { sender: 'user', text: userText }]);
-    setUserChatText('');
-
-    setTimeout(() => {
-      let aiResponse = "I can locate any luxury technical spec for you. Try asking about 'watches', 'delivery timescales', or 'selling on Aetheris'.";
-      const q = userText.toLowerCase();
-
-      if (q.includes('watch') || q.includes('time')) {
-        aiResponse = "We host the Aetheris Chrono VII ($1,850) with automatic tourbillon movement. It features a titanium carbon composite casing. Shall I add it to your bag?";
-      } else if (q.includes('delivery') || q.includes('shipping')) {
-        aiResponse = "Aetheris uses secure hyper-freight logistics. Domestic shipping is complete in 24 hours. Global courier deliveries resolve in 3-5 days, fully tracked.";
-      } else if (q.includes('sell') || q.includes('studio') || q.includes('become')) {
-        aiResponse = "Creating your designer profile is instant! Cycle to 'Seller Mode' in the navbar or click the 'Open Studio' link in the footer to initialize your dashboard.";
-      } else if (q.includes('coupon') || q.includes('discount')) {
-        aiResponse = "Active discount codes include 'NEON50' (50% off), 'STARTUP20' (20% off), and 'WELCOME10' (10% off). Enter them in your shopping bag page.";
-      } else if (q.includes('refund') || q.includes('return')) {
-        aiResponse = "Aetheris offers a 30-day premium refund policy with insured pickup routes. All refunds update your original balance within 48 hours.";
-      }
-
-      setChatMessages(prev => [...prev, { sender: 'ai', text: aiResponse }]);
-    }, 500);
-  };
-
   return (
     <>
       <Navbar />
@@ -119,77 +85,216 @@ export default function LandingPage() {
       <main className="flex-1">
 
         {/* Hero Section */}
-        <section className="relative overflow-hidden pt-12 pb-20 md:py-32">
+        {activeTheme === 'dark' ? (
+          /* Nike 2022 Collections Premium Dark Hero */
+          <section className="relative overflow-hidden pt-16 pb-24 md:py-36 bg-[#09091E]">
+            {/* Background Glows and Floating Shapes */}
+            <div className="absolute inset-0 -z-10 overflow-hidden">
+              {/* Radial Blur Glows */}
+              <div className="absolute top-1/4 left-1/3 w-[400px] h-[400px] rounded-full bg-sky-500/10 blur-[120px]" />
+              <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-purple-500/10 blur-[150px]" />
+              
+              {/* Floating Decorative Rings and Shapes to match Nike styling */}
+              <div className="absolute top-16 right-[15%] w-12 h-12 rounded-full border border-orange-500/20 animate-float" style={{ animation: 'float 6s ease-in-out infinite', animationDelay: '1s' }} />
+              <div className="absolute bottom-20 left-[10%] w-8 h-8 rounded-full border border-purple-500/30 animate-float" style={{ animation: 'float 6s ease-in-out infinite', animationDelay: '3s' }} />
+              <div className="absolute top-1/3 left-[8%] w-10 h-10 border border-orange-400/20 rotate-45 animate-pulse" />
+              <div className="absolute bottom-1/3 right-[12%] w-16 h-16 rounded-full border border-sky-400/25 animate-float" style={{ animation: 'float 6s ease-in-out infinite', animationDelay: '0.5s' }} />
+            </div>
 
-          {/* Ambient Background Mesh */}
-          <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-20">
-            <div className="h-[300px] w-[500px] rounded-full bg-gradient-to-tr from-brand to-accent-color blur-[80px]" />
-          </div>
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                {/* Left Side: Headline and CTAs */}
+                <div className="lg:col-span-7 text-left space-y-6 sm:space-y-8">
+                  {/* Featured Badge */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="inline-flex items-center space-x-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-1.5 text-xs font-bold text-sky-400 uppercase tracking-widest"
+                  >
+                    <span className="h-2 w-2 rounded-full bg-sky-400 animate-ping" />
+                    <span>Featured Release</span>
+                  </motion.div>
 
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center space-y-8 max-w-4xl mx-auto">
-
-
-
-              {/* Title & Tagline */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="font-display text-4xl font-extrabold tracking-tight text-theme-text sm:text-6xl"
-              >
-                Luxury Marketplace for <span className="bg-gradient-to-r from-brand to-accent-color bg-clip-text text-transparent glow-text">Artisan Artifacts</span>
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-base text-theme-muted sm:text-xl max-w-2xl mx-auto leading-relaxed"
-              >
-                Curating the frontier of mechanical chronography, soundstage acoustics, and smart home levitation. Built for collectors of modern intelligence.
-              </motion.p>
-
-              {/* CTA Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
-              >
-                <Link
-                  href="/products"
-                  className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-full bg-brand hover:bg-brand-hover px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-brand/20 hover:shadow-brand/40 transition-all duration-300 transform hover:-translate-y-0.5"
-                >
-                  <span>Buy Products</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-
-              </motion.div>
-
-              {/* Real-time System Metrics */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-12 border-t border-theme-border"
-              >
-                {[
-                  { value: '$1.4M+', label: 'Transaction Vol' },
-                  { value: '52', label: 'Bespoke Studios' },
-                  { value: '24hr', label: 'Cargo Handoff' },
-                  { value: '4.8★', label: 'Studio Avg Rating' }
-                ].map((stat, idx) => (
-                  <div key={idx} className="p-3 rounded-2xl bg-theme-card/10 border border-theme-border/50 backdrop-blur-sm">
-                    <div className="text-xl font-extrabold text-brand sm:text-2xl">{stat.value}</div>
-                    <div className="text-[10px] sm:text-xs text-theme-muted uppercase tracking-wider mt-1">{stat.label}</div>
+                  {/* Nike-Style Blocky Headers */}
+                  <div className="space-y-1">
+                    <motion.h1
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="font-display text-5xl sm:text-7xl font-extrabold tracking-tight text-white uppercase leading-none"
+                    >
+                      AETHERIS <span className="text-sky-400 font-black">2026</span>
+                    </motion.h1>
+                    <motion.h2
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="font-display text-5xl sm:text-7xl font-black tracking-tight text-outline-white uppercase leading-none"
+                    >
+                      COLLECTIONS
+                    </motion.h2>
                   </div>
-                ))}
-              </motion.div>
 
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-sm sm:text-base text-[#8E9BB4] max-w-xl leading-relaxed"
+                  >
+                    Inspiring collectors worldwide, Aetheris delivers premium artisan artifacts, interactive mechanical masterpieces, and vanguard designs.
+                  </motion.p>
+
+                  {/* Buttons */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="flex flex-wrap items-center gap-4"
+                  >
+                    <Link
+                      href="/products"
+                      className="inline-flex items-center justify-center space-x-2 rounded-xl bg-sky-500 hover:bg-sky-600 px-8 py-4 text-sm font-bold text-white shadow-xl shadow-sky-500/20 transition-all duration-300 active:scale-95 cursor-pointer"
+                    >
+                      <span>Shop Now</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                    <Link
+                      href="/vault-offers"
+                      className="inline-flex items-center justify-center space-x-2 rounded-xl border border-white/20 hover:border-white bg-transparent hover:bg-white/5 px-8 py-4 text-sm font-bold text-white transition-all duration-300 active:scale-95 cursor-pointer"
+                    >
+                      <ShoppingBag className="h-4 w-4" />
+                      <span>Explore Vault</span>
+                    </Link>
+                  </motion.div>
+                </div>
+
+                {/* Right Side: Floating Shoe & Small Badge */}
+                <div className="lg:col-span-5 relative flex justify-center lg:justify-end">
+                  {/* Background Radial Light Circle */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-gradient-to-tr from-sky-500/20 to-purple-500/20 blur-2xl" />
+                  
+                  {/* Floating Sneaker Frame */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ delay: 0.3, type: "spring", stiffness: 100 }}
+                    className="relative max-w-sm sm:max-w-md"
+                  >
+                    {/* Running Shoe Image */}
+                    <img
+                      src="/blue_sneaker.png"
+                      alt="Vanguard Running Shoe Showcase"
+                      className="w-full h-auto object-contain z-10 relative drop-shadow-[0_25px_50px_rgba(14,165,233,0.3)] filter brightness-110 -rotate-[15deg] group-hover:rotate-0 transition-transform duration-500 animate-float"
+                    />
+                    
+                    {/* Small Discount Pill overlay like reference */}
+                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 glass-panel border border-white/10 rounded-2xl p-3 flex items-center space-x-3 w-[80%] shadow-2xl z-20">
+                      <div className="h-8 w-8 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 font-bold text-xs shrink-0">%</div>
+                      <div className="text-left min-w-0">
+                        <p className="text-[10px] font-bold text-white">Get up to 30% off</p>
+                        <p className="text-[8px] text-[#8E9BB4] truncate">Exclusive member discounts</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </section>
+        ) : (
+          /* Nike Mint Green E-Commerce Light Hero */
+          <section className="relative overflow-hidden pt-12 pb-20 md:py-32">
+
+            {/* Ambient Background Mesh */}
+            <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-20">
+              <div className="h-[300px] w-[500px] rounded-full bg-gradient-to-tr from-brand to-accent-color blur-[80px]" />
+            </div>
+
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="text-center space-y-8 max-w-4xl mx-auto">
+
+                {/* Title & Tagline */}
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="font-display text-4xl font-extrabold tracking-tight text-theme-text sm:text-6xl"
+                >
+                  Luxury Marketplace for <span className="bg-gradient-to-r from-brand to-accent-color bg-clip-text text-transparent glow-text">Artisan Artifacts</span>
+                </motion.h1>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-base text-theme-muted sm:text-xl max-w-2xl mx-auto leading-relaxed"
+                >
+                  Curating the frontier of mechanical chronography, soundstage acoustics, and smart home levitation. Built for collectors of modern intelligence.
+                </motion.p>
+
+                {/* CTA Buttons */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+                >
+                  <Link
+                    href="/products"
+                    className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-full bg-brand hover:bg-brand-hover px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-brand/20 hover:shadow-brand/40 transition-all duration-300 transform hover:-translate-y-0.5"
+                  >
+                    <span>Buy Products</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+
+                </motion.div>
+
+                {/* Real-time System Metrics */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-12 border-t border-theme-border"
+                >
+                  {[
+                    { value: '$1.4M+', label: 'Transaction Vol' },
+                    { value: '52', label: 'Bespoke Studios' },
+                    { value: '24hr', label: 'Cargo Handoff' },
+                    { value: '4.8★', label: 'Studio Avg Rating' }
+                  ].map((stat, idx) => (
+                    <div key={idx} className="p-3 rounded-2xl bg-theme-card/10 border border-theme-border/50 backdrop-blur-sm">
+                      <div className="text-xl font-extrabold text-brand sm:text-2xl">{stat.value}</div>
+                      <div className="text-[10px] sm:text-xs text-theme-muted uppercase tracking-wider mt-1">{stat.label}</div>
+                    </div>
+                  ))}
+                </motion.div>
+
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Scrolling Marquee Ribbon (Nike Collections Style) */}
+        {activeTheme === 'dark' && (
+          <div className="relative w-full overflow-hidden bg-purple-950/20 border-y border-purple-500/10 py-4 select-none">
+            <div className="flex w-[200%] animate-marquee whitespace-nowrap text-xs font-black uppercase tracking-widest text-[#A855F7]/70">
+              <span className="mx-4">CHRONOGRAPHS</span> • 
+              <span className="mx-4 text-sky-400">ACOUSTICS</span> • 
+              <span className="mx-4">LEVITATION</span> • 
+              <span className="mx-4 text-[#ec4899]">VANGUARD GEAR</span> • 
+              <span className="mx-4">ARTISAN BOUTIQUE</span> • 
+              <span className="mx-4 text-sky-400">CHRONOGRAPHS</span> • 
+              <span className="mx-4">ACOUSTICS</span> • 
+              <span className="mx-4">LEVITATION</span> • 
+              <span className="mx-4 text-[#ec4899]">VANGUARD GEAR</span> • 
+              <span className="mx-4">ARTISAN BOUTIQUE</span> • 
+              <span className="mx-4 text-sky-400">CHRONOGRAPHS</span> • 
+              <span className="mx-4">ACOUSTICS</span> • 
+              <span className="mx-4">LEVITATION</span> • 
+              <span className="mx-4 text-[#ec4899]">VANGUARD GEAR</span> • 
+              <span className="mx-4">ARTISAN BOUTIQUE</span>
             </div>
           </div>
-        </section>
+        )}
 
         {/* AI Concierge Search Assistant Bar */}
         <section className="py-8 border-y border-theme-border bg-black/10">
@@ -326,6 +431,95 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Nike Style Middle Showcase Section */}
+        {activeTheme === 'dark' && (
+          <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            {/* Background glowing circle */}
+            <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-80 h-80 rounded-full bg-purple-500/5 blur-3xl -z-10" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              {/* Left Side: Gradient Triangle and Shoe */}
+              <div className="lg:col-span-6 relative flex justify-center h-96 items-center">
+                {/* Giant Outlined SVG Triangle with neon gradient border */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg
+                    width="380"
+                    height="380"
+                    viewBox="0 0 100 100"
+                    className="w-[85%] h-[85%] select-none pointer-events-none opacity-85 scale-x-[-1] rotate-[15deg] animate-pulse"
+                  >
+                    <defs>
+                      <linearGradient id="triangleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#EC4899" />
+                        <stop offset="50%" stopColor="#A855F7" />
+                        <stop offset="100%" stopColor="#F59E0B" />
+                      </linearGradient>
+                      <filter id="glow-effect-triangle">
+                        <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                    </defs>
+                    <polygon
+                      points="50,12 90,85 10,85"
+                      fill="none"
+                      stroke="url(#triangleGradient)"
+                      strokeWidth="2.5"
+                      strokeLinejoin="round"
+                      filter="url(#glow-effect-triangle)"
+                    />
+                  </svg>
+                </div>
+
+                {/* Overlapping Sneaker Image */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, rotate: 10 }}
+                  whileInView={{ opacity: 1, scale: 1, rotate: -8 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className="relative z-10 w-[70%] max-w-sm"
+                >
+                  <img
+                    src="/blue_sneaker.png"
+                    alt="Vanguard Sneaker Overlay"
+                    className="w-full h-auto object-contain drop-shadow-[0_20px_40px_rgba(236,72,153,0.3)] filter brightness-110"
+                  />
+                  {/* Subtle giant name overlay behind the shoe */}
+                  <span className="absolute -top-16 -left-8 text-7xl font-black text-white/5 tracking-wider font-display select-none -z-10 uppercase">
+                    AETHERIS
+                  </span>
+                </motion.div>
+              </div>
+
+              {/* Right Side: Product Details */}
+              <div className="lg:col-span-6 space-y-6 text-left">
+                <span className="text-xs uppercase font-extrabold tracking-widest text-[#A855F7] block">
+                  We Provide
+                </span>
+                <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-white uppercase tracking-tight">
+                  Modern Artifacts
+                </h2>
+                <p className="text-sm sm:text-base text-[#8E9BB4] leading-relaxed max-w-xl">
+                  Designed for the way you live your life. Every Aetheris artifact is beautiful in its simplicity, supporting your lifestyle with high-utility features and uncompromising engineering.
+                </p>
+                <div className="pt-2">
+                  <Link
+                    href="/products/prod-perfect-1"
+                    className="inline-flex items-center space-x-2 rounded-xl border border-white/20 hover:border-white px-6 py-3.5 text-xs font-bold text-white bg-transparent hover:bg-white/5 transition-all duration-300 active:scale-95 cursor-pointer"
+                  >
+                    <span>Explore More</span>
+                    <ArrowRight className="h-4.5 w-4.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        <LimitedVaultOffer />
+
         {/* AI Recommended Carousel Banner */}
         <section className="py-12 bg-gradient-to-r from-brand/5 via-accent-color/5 to-brand/5 border-y border-theme-border overflow-hidden">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -375,15 +569,25 @@ export default function LandingPage() {
 
         {/* Trending Artifacts Grid */}
         <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-brand">Hot Releases</span>
-              <h2 className="font-display text-2xl font-bold text-theme-text mt-1 sm:text-3xl">Trending Products</h2>
+              <span className="text-xs font-bold uppercase tracking-wider text-brand">
+                {activeTheme === 'dark' ? 'JUST' : 'Hot Releases'}
+              </span>
+              <h2 className="font-display text-2xl sm:text-3xl font-black text-theme-text uppercase tracking-tight mt-1">
+                {activeTheme === 'dark' ? 'DROPPED' : 'Trending Products'}
+              </h2>
             </div>
-            <Link href="/products" className="text-xs font-semibold text-brand hover:text-brand-hover flex items-center space-x-1">
-              <span>View catalog</span>
-              <ArrowRight className="h-3 w-3" />
-            </Link>
+            {activeTheme === 'dark' ? (
+              <p className="text-xs sm:text-sm text-[#8E9BB4] max-w-xl leading-relaxed">
+                Design for the way you live your life. Atoms are beautiful in their simplicity, supporting your feet with absolute comfort.
+              </p>
+            ) : (
+              <Link href="/products" className="text-xs font-semibold text-brand hover:text-brand-hover flex items-center space-x-1 self-start md:self-auto shrink-0">
+                <span>View catalog</span>
+                <ArrowRight className="h-3 w-3" />
+              </Link>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -540,73 +744,7 @@ export default function LandingPage() {
 
       </main>
 
-      {/* Floating Chatbot conciergie toggle */}
-      <div className="fixed bottom-24 right-6 z-40 md:bottom-6">
-        <button
-          onClick={() => setShowChatbot(!showChatbot)}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white shadow-2xl shadow-brand/40 hover:bg-brand-hover transition-all transform hover:-translate-y-0.5"
-        >
-          <MessageSquare className="h-5 w-5" />
-        </button>
 
-        {/* Chatbot window overlay */}
-        <AnimatePresence>
-          {showChatbot && (
-            <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 30, scale: 0.95 }}
-              className="absolute bottom-16 right-0 w-80 sm:w-96 rounded-3xl border border-theme-border bg-theme-bg-from/95 p-4 shadow-2xl backdrop-blur-xl flex flex-col h-[400px] z-50"
-            >
-              <div className="flex items-center justify-between border-b border-theme-border pb-3">
-                <div className="flex items-center space-x-2">
-                  <div className="h-2 w-2 rounded-full bg-green-500 animate-ping" />
-                  <span className="font-display text-sm font-bold text-theme-text">Aetheris Concierge Intelligence</span>
-                </div>
-                <button onClick={() => setShowChatbot(false)} className="text-xs text-theme-muted hover:text-theme-text">
-                  Hide
-                </button>
-              </div>
-
-              {/* Message scroll container */}
-              <div className="flex-1 overflow-y-auto py-3 space-y-3 pr-1">
-                {chatMessages.map((msg, index) => (
-                  <div
-                    key={index}
-                    className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={`max-w-[80%] rounded-2xl px-3 py-2 text-xs leading-relaxed ${msg.sender === 'user'
-                        ? 'bg-brand text-white'
-                        : 'bg-theme-card/30 border border-theme-border text-theme-text'
-                        }`}
-                    >
-                      {msg.text}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Chat Input form */}
-              <form onSubmit={handleSendChatMessage} className="border-t border-theme-border pt-3 flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Ask concierge..."
-                  value={userChatText}
-                  onChange={(e) => setUserChatText(e.target.value)}
-                  className="w-full rounded-xl border border-theme-border bg-theme-bg-from/50 px-3 py-2 text-xs text-theme-text outline-none focus:border-brand"
-                />
-                <button
-                  type="submit"
-                  className="rounded-xl bg-brand text-white p-2 hover:bg-brand-hover transition-colors shrink-0"
-                >
-                  <Send className="h-3.5 w-3.5" />
-                </button>
-              </form>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
 
       <Footer />
     </>
