@@ -118,39 +118,39 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12" style={{
-      background: 'linear-gradient(135deg, #0f0c29 0%, #1a1440 30%, #24243e 60%, #0f0c29 100%)'
+        <div className="min-h-screen flex items-center justify-center px-4 py-12" style={{
+      background: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)'
     }}>
       {/* Animated background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/8 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand/5 rounded-full blur-3xl" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-300/30 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-300/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-md z-10">
         {/* Logo & Title */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-brand to-purple-600 shadow-2xl shadow-brand/25 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-brand to-purple-500 shadow-xl shadow-brand/20 mb-4">
             <Sparkles className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
             ELITEhub<span className="text-brand">.</span>
           </h1>
-          <p className="text-sm text-gray-400 mt-1">Unified Secure Gateway</p>
+          <p className="text-sm text-gray-500 mt-1">Unified Secure Gateway</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 p-6 space-y-5 shadow-2xl" style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(20px)' }}>
+        <div className="rounded-2xl border border-gray-200 bg-white/70 p-6 space-y-5 shadow-2xl" style={{ backdropFilter: 'blur(20px)' }}>
 
           {/* Mode Switch Tabs */}
-          <div className="grid grid-cols-2 gap-2 p-1 bg-white/5 rounded-xl border border-white/5">
+          <div className="grid grid-cols-2 gap-2 p-1 bg-gray-100/80 rounded-xl border border-gray-200">
             <button
               type="button"
               onClick={() => { setIsSignUp(false); setError(''); }}
               className={`py-2 text-xs font-bold rounded-lg transition-all ${
                 !isSignUp 
-                  ? 'bg-brand text-white shadow-md' 
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-white text-gray-900 shadow-sm border border-gray-200/50' 
+                  : 'text-gray-500 hover:text-gray-800'
               }`}
             >
               Sign In
@@ -160,8 +160,8 @@ export default function LoginPage() {
               onClick={() => { setIsSignUp(true); setError(''); }}
               className={`py-2 text-xs font-bold rounded-lg transition-all ${
                 isSignUp 
-                  ? 'bg-brand text-white shadow-md' 
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-white text-gray-900 shadow-sm border border-gray-200/50' 
+                  : 'text-gray-500 hover:text-gray-800'
               }`}
             >
               Sign Up
@@ -169,11 +169,11 @@ export default function LoginPage() {
           </div>
 
           <div className="flex items-center space-x-3 pt-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border bg-blue-500/10 border-blue-500/20 text-blue-400">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border bg-blue-50 border-blue-100 text-brand">
               {isSignUp ? <UserPlus className="h-5 w-5" /> : <User className="h-5 w-5" />}
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">{isSignUp ? 'Create Account' : 'Welcome Back'}</h2>
+              <h2 className="text-base font-bold text-gray-900">{isSignUp ? 'Create Account' : 'Welcome Back'}</h2>
               <p className="text-[10px] text-gray-500">
                 {isSignUp ? 'Join the multi-vendor premium marketplace' : 'Access your personalized dashboard workspace'}
               </p>
@@ -195,7 +195,7 @@ export default function LoginPage() {
 
           {/* Error message */}
           {error && (
-            <div className="flex items-center space-x-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs animate-pulse">
+            <div className="flex items-center space-x-2 p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-xs animate-pulse">
               <AlertCircle className="h-4 w-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -207,14 +207,14 @@ export default function LoginPage() {
               <div className="space-y-1.5 transition-all">
                 <label className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Full Name</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
                     type="text"
                     required
                     placeholder="Enter your name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/25 transition-all"
+                    className="w-full rounded-xl border border-gray-200 bg-white pl-10 pr-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-brand focus:ring-1 focus:ring-brand/20 transition-all shadow-sm"
                   />
                 </div>
               </div>
@@ -224,14 +224,14 @@ export default function LoginPage() {
             <div className="space-y-1.5">
               <label className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="email"
                   required
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/25 transition-all"
+                  className="w-full rounded-xl border border-gray-200 bg-white pl-10 pr-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-brand focus:ring-1 focus:ring-brand/20 transition-all shadow-sm"
                 />
               </div>
             </div>
@@ -240,7 +240,7 @@ export default function LoginPage() {
             <div className="space-y-1.5">
               <label className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
@@ -248,12 +248,12 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-11 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/25 transition-all"
+                  className="w-full rounded-xl border border-gray-200 bg-white pl-10 pr-11 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-brand focus:ring-1 focus:ring-brand/20 transition-all shadow-sm"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -270,8 +270,8 @@ export default function LoginPage() {
                     onClick={() => setSignUpRole('buyer')}
                     className={`rounded-xl border py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 ${
                       signUpRole === 'buyer'
-                        ? 'border-brand bg-brand/10 text-brand'
-                        : 'border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                        ? 'border-brand bg-brand/10 text-brand shadow-sm'
+                        : 'border-gray-200 bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-700'
                     }`}
                   >
                     <ShoppingBag className="h-4 w-4" />
@@ -282,8 +282,8 @@ export default function LoginPage() {
                     onClick={() => setSignUpRole('seller')}
                     className={`rounded-xl border py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 ${
                       signUpRole === 'seller'
-                        ? 'border-brand bg-brand/10 text-brand'
-                        : 'border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                        ? 'border-brand bg-brand/10 text-brand shadow-sm'
+                        : 'border-gray-200 bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-700'
                     }`}
                   >
                     <Store className="h-4 w-4" />
@@ -300,7 +300,7 @@ export default function LoginPage() {
             >
               {loading ? (
                 <>
-                  <span className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                  <span className="h-4 w-4 rounded-full border-2 border-brand border-t-transparent animate-spin" />
                   Processing...
                 </>
               ) : (
@@ -313,14 +313,14 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-2 text-center">
-            <Link href="/" className="text-xs text-brand hover:text-white transition-colors">
+            <Link href="/" className="text-xs text-brand hover:text-brand-hover transition-colors font-medium">
               Return to Marketplace
             </Link>
           </div>
         </div>
 
         {/* Footer badge */}
-        <p className="text-center text-[10px] text-gray-600 mt-6">
+        <p className="text-center text-[10px] text-gray-500 mt-6 font-medium">
           Secured by ELITEhub • Multi-Vendor Marketplace Platform
         </p>
       </div>

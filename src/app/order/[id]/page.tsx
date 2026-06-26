@@ -14,7 +14,8 @@ import {
   Sparkles,
   ArrowRight,
   TrendingUp,
-  RotateCcw
+  RotateCcw,
+  CreditCard
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -42,6 +43,11 @@ export default function OrderTracking({ params }: PageProps) {
       return { ...item, prod };
     });
   }, [order, products]);
+
+  const itemsSubtotal = useMemo(() => {
+    if (!order) return 0;
+    return order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }, [order]);
 
   // Handle Dynamic Courier advancing for previewing
   const advanceStatus = () => {
@@ -246,6 +252,42 @@ export default function OrderTracking({ params }: PageProps) {
               </div>
             </div>
 
+            {/* Payment Details */}
+            <div className="glass-panel rounded-3xl p-6 border border-theme-border space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-theme-text border-b border-theme-border pb-3 flex items-center space-x-1.5">
+                <CreditCard className="h-4.5 w-4.5 text-brand" />
+                <span>Payment Details</span>
+              </h3>
+
+              <div className="text-xs text-theme-muted space-y-2">
+                <div className="flex justify-between items-center">
+                  <span>Method:</span>
+                  <span className="font-semibold text-theme-text">
+                    {order.payment_method === 'cod' ? 'Cash on Delivery (COD)' :
+                     order.payment_method === 'upi' ? 'UPI Payment' :
+                     order.payment_method === 'qr' ? 'Scan & Pay QR Code' : 'Online Payment'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Status:</span>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                    order.payment_status === 'paid' 
+                      ? 'bg-green-500/10 text-green-400 border border-green-500/20' 
+                      : order.payment_status === 'pending'
+                      ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                      : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                  }`}>
+                    {order.payment_status}
+                  </span>
+                </div>
+                {order.payment_method === 'cod' && (
+                  <p className="text-[10px] text-amber-400/90 bg-amber-500/5 p-2 rounded-xl border border-amber-500/10 mt-2 leading-relaxed">
+                    ₹40 Cash on Delivery charge is included in the total. Please keep cash ready at delivery.
+                  </p>
+                )}
+              </div>
+            </div>
+
             {/* Items review list */}
             <div className="glass-panel rounded-3xl p-6 border border-theme-border space-y-4">
               <h3 className="text-xs font-bold uppercase tracking-wider text-theme-text border-b border-theme-border pb-3 flex items-center space-x-1.5">
@@ -263,26 +305,47 @@ export default function OrderTracking({ params }: PageProps) {
                       <h4 className="text-xs font-bold text-theme-text truncate">{item.title}</h4>
                       <span className="text-[10px] text-theme-muted block">{item.variant || 'Default'} × {item.quantity}</span>
                     </div>
-                    <span className="text-xs font-bold text-brand">${item.price * item.quantity}</span>
+                    <span className="text-xs font-bold text-brand">₹{item.price * item.quantity}</span>
                   </div>
                 ))}
               </div>
 
               {/* Total calculations list */}
               <div className="border-t border-theme-border/40 pt-4 space-y-2 text-[11px] text-theme-muted">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>₹{itemsSubtotal}</span>
+                </div>
                 {order.discount_amount > 0 && (
                   <div className="flex justify-between text-green-400">
                     <span>Discount</span>
-                    <span>-${order.discount_amount}</span>
+                    <span>-₹{order.discount_amount}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span>Luxury GST (18%)</span>
-                  <span>${order.gst_amount}</span>
+                  <span>₹{order.gst_amount}</span>
                 </div>
+                {(() => {
+                  const isCod = order.payment_method === 'cod';
+                  const codCharge = isCod ? 40 : 0;
+                  const computedShipping = Math.max(0, Math.round((order.total_amount - itemsSubtotal + order.discount_amount - order.gst_amount - codCharge) * 100) / 100);
+                  return computedShipping > 0 ? (
+                    <div className="flex justify-between">
+                      <span>Shipping Fee</span>
+                      <span>₹{computedShipping}</span>
+                    </div>
+                  ) : null;
+                })()}
+                {order.payment_method === 'cod' && (
+                  <div className="flex justify-between text-amber-400 font-semibold">
+                    <span>COD Handling Fee</span>
+                    <span>₹40</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-sm font-extrabold text-theme-text border-t border-theme-border/25 pt-2">
-                  <span>Grand Total Paid</span>
-                  <span className="text-brand text-base">${order.total_amount}</span>
+                  <span>{order.payment_method === 'cod' ? 'Total Amount Due' : 'Grand Total Paid'}</span>
+                  <span className="text-brand text-base">₹{order.total_amount}</span>
                 </div>
               </div>
             </div>

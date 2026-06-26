@@ -693,7 +693,6 @@ export const useStore = create<StoreState>((set, get) => {
 
     createOrder: async (shippingAddress, paymentMethod) => {
       set({ loading: true });
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Secure gateway lag simulator
 
       const { cart, products, getBillingSummary, currentUser, activeCoupon } = get();
       const billing = getBillingSummary();
@@ -709,14 +708,16 @@ export const useStore = create<StoreState>((set, get) => {
         };
       });
 
+      const isCod = paymentMethod === 'cod';
       const newOrder: Order = {
         id: `ord-${Math.floor(100000 + Math.random() * 900000)}`,
         buyer_id: currentUser?.id || 'anonymous',
-        total_amount: billing.total,
+        total_amount: billing.total + (isCod ? 40 : 0),
         gst_amount: billing.gst,
         discount_amount: billing.discount,
         shipping_address: shippingAddress,
-        payment_status: 'paid', // Auto-successful in simulator
+        payment_status: isCod ? 'pending' : 'paid',
+        payment_method: paymentMethod,
         shipping_status: 'placed',
         coupon_code: activeCoupon?.code,
         items: orderItems,
@@ -724,7 +725,9 @@ export const useStore = create<StoreState>((set, get) => {
           {
             status: 'placed',
             timestamp: new Date().toISOString(),
-            description: 'Secure payment confirmed. Order dispatched to studios for pack logs.'
+            description: isCod 
+              ? 'Order placed via Cash on Delivery. Cash to be collected at delivery.'
+              : 'Secure payment confirmed. Order dispatched to studios for pack logs.'
           }
         ],
         created_at: new Date().toISOString()

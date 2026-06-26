@@ -9,7 +9,7 @@ export const supabase = supabaseUrl && supabaseAnonKey
   : null;
 
 // Mock database storage for frontend fallback
-const MOCK_STORAGE_KEY = 'multi_vendor_db_v9';
+const MOCK_STORAGE_KEY = 'multi_vendor_db_v10';
 
 export interface User {
   id: string;
@@ -70,6 +70,7 @@ export interface Order {
     phone: string;
   };
   payment_status: 'pending' | 'paid' | 'failed';
+  payment_method?: string;
   shipping_status: 'placed' | 'packed' | 'shipped' | 'out_for_delivery' | 'delivered';
   coupon_code?: string;
   discount_amount: number;
@@ -199,7 +200,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 85,
     category: 'Apparel & Style',
     images: [
-      'https://images.unsplash.com/photo-1596755094514-f87e32f85e98?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80'
     ],
     inventory: 150,
@@ -679,7 +680,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 125,
     category: 'Apparel & Style',
     images: [
-      'https://images.unsplash.com/photo-1627124765135-56c2c7790404?w=800&auto=format&fit=crop&q=80'
+      'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=800&auto=format&fit=crop&q=80'
     ],
     inventory: 120,
     status: 'active',

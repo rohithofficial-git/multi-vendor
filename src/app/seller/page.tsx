@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useStore } from '../../store/useStore';
+import SellerCatalogView from '../../components/SellerCatalogView';
 import { 
   Store, 
   DollarSign, 
@@ -45,7 +46,7 @@ export default function SellerSaaSStudio() {
   };
 
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'products' | 'orders'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'products' | 'orders' | 'catalog'>('dashboard');
 
   useEffect(() => {
     setMounted(true);
@@ -318,7 +319,8 @@ export default function SellerSaaSStudio() {
             <div className="flex w-full overflow-x-auto bg-theme-card/50 p-1 rounded-xl border border-theme-border/50 backdrop-blur-md mb-6">
               {[
                 { id: 'dashboard', label: 'Overview', icon: BarChart3 },
-                { id: 'products', label: 'Products', icon: ShoppingBag },
+                { id: 'products', label: 'Products Ledger', icon: Sliders },
+                { id: 'catalog', label: 'Catalog View', icon: ShoppingBag },
                 { id: 'orders', label: 'Fulfillment', icon: Store }
               ].map((tab) => (
                 <button
@@ -467,6 +469,11 @@ export default function SellerSaaSStudio() {
                   </div>
                 )}
               </div>
+            )}
+
+            {/* Tab Content: Catalog View */}
+            {activeTab === 'catalog' && (
+              <SellerCatalogView sellerId={currentSeller.id} />
             )}
 
             {/* Tab Content: Orders */}
