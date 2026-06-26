@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -140,7 +140,7 @@ export default function CheckoutPage() {
   const paymentOptions: { id: PaymentMethod; title: string; subtitle: string; icon: React.ReactNode; badge?: string }[] = [
     { id: 'upi', title: 'UPI Payment', subtitle: 'PhonePe, GPay, Paytm, BHIM & more', icon: <Smartphone className="h-5 w-5" />, badge: 'Instant' },
     { id: 'qr', title: 'Scan & Pay (QR)', subtitle: 'Scan QR code from any UPI app', icon: <QrCode className="h-5 w-5" /> },
-    { id: 'cod', title: 'Cash on Delivery', subtitle: 'Pay with cash when your order arrives (+â‚¹40)', icon: <Banknote className="h-5 w-5" /> }
+    { id: 'cod', title: 'Cash on Delivery', subtitle: 'Pay with cash when your order arrives (+\u20B940)', icon: <Banknote className="h-5 w-5" /> }
   ];
 
   const INDIAN_STATES = ['Andhra Pradesh','Assam','Bihar','Chhattisgarh','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal'];
@@ -456,7 +456,7 @@ export default function CheckoutPage() {
                               <rect x="90" y="80" width="5" height="5" fill="black"/>
                               <rect x="75" y="85" width="5" height="5" fill="black"/>
                               <rect x="43" y="43" width="14" height="14" rx="2" fill="white" stroke="black" strokeWidth="1"/>
-                              <text x="50" y="53" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#6366f1">â‚¹</text>
+                              <text x="50" y="53" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#6366f1">{"\u20B9"}</text>
                             </svg>
                           </div>
                           <p className="text-[9px] font-bold text-gray-600 uppercase tracking-wider mt-1">UPI QR Â· Scan & Pay</p>
@@ -474,7 +474,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="flex items-center justify-center space-x-1 text-sm font-bold text-theme-text">
                         <IndianRupee className="h-4 w-4" />
-                        <span>â‚¹{billing.total}</span>
+                        <span>{"\u20B9"}{billing.total}</span>
                       </div>
                       <p className="text-[10px] text-theme-muted max-w-xs mx-auto">After completing payment in your UPI app, click "Review Order" below.</p>
                       <div className="flex items-center gap-1.5 text-[10px] text-theme-muted justify-center">
@@ -494,7 +494,7 @@ export default function CheckoutPage() {
                         <div>
                           <h4 className="text-sm font-bold text-theme-text">Pay on Delivery</h4>
                           <p className="text-xs text-theme-muted mt-1 leading-relaxed">
-                            Pay with cash or card when your order arrives at your doorstep. A â‚¹40 handling fee applies for COD orders.
+                            Pay with cash or card when your order arrives at your doorstep. A {"\u20B9"}40 handling fee applies for COD orders.
                           </p>
                         </div>
                       </div>
@@ -503,8 +503,8 @@ export default function CheckoutPage() {
                         <ul className="space-y-1.5">
                           {[
                             'Keep exact change ready for a smooth handover',
-                            'COD handling charge: â‚¹40 added to your total',
-                            'Orders above â‚¹10,000 may not be eligible for COD',
+                            'COD handling charge: \u20B940 added to your total',
+                            'Orders above \u20B910,000 may not be eligible for COD',
                             'Available at 18,000+ PIN codes across India'
                           ].map((note, i) => (
                             <li key={i} className="text-[10px] text-theme-muted flex items-start space-x-1.5">
@@ -574,7 +574,7 @@ export default function CheckoutPage() {
                     </div>
                     <div>
                       <p className="text-sm font-bold text-theme-text">
-                        {paymentMethod === 'cod' ? 'Cash on Delivery (+â‚¹40)' : paymentMethod === 'upi' ? 'UPI Payment' : 'Scan & Pay (QR)'}
+                        {paymentMethod === 'cod' ? 'Cash on Delivery (+\u20B940)' : paymentMethod === 'upi' ? 'UPI Payment' : 'Scan & Pay (QR)'}
                       </p>
                       {paymentMethod === 'upi' && upiId && <p className="text-[10px] text-theme-muted">{upiId}</p>}
                     </div>
@@ -609,7 +609,7 @@ export default function CheckoutPage() {
                     ) : (
                       <>
                         <IndianRupee className="h-4 w-4" />
-                        <span>Place Order Â· â‚¹{paymentMethod === 'cod' ? codTotal.toFixed(2) : billing.total}</span>
+                        <span>Place Order · {"\u20B9"}{paymentMethod === 'cod' ? codTotal.toFixed(2) : billing.total}</span>
                       </>
                     )}
                   </button>
@@ -649,7 +649,7 @@ export default function CheckoutPage() {
                     <h4 className="text-xs font-bold text-theme-text truncate">{item.prod.title}</h4>
                     <span className="text-[10px] text-theme-muted block">{item.variant || 'Default'} Ã— {item.quantity}</span>
                   </div>
-                  <span className="text-xs font-semibold text-brand shrink-0">â‚¹{Math.round(item.prod.price * item.quantity * 100) / 100}</span>
+                  <span className="text-xs font-semibold text-brand shrink-0">{"\u20B9"}{Math.round(item.prod.price * item.quantity * 100) / 100}</span>
                 </div>
               ))}
             </div>
@@ -657,35 +657,35 @@ export default function CheckoutPage() {
             <div className="border-t border-theme-border/50 pt-4 space-y-2.5 text-xs">
               <div className="flex justify-between text-theme-muted">
                 <span>Price ({cartItems.length} items)</span>
-                <span>â‚¹{billing.subtotal}</span>
+                <span>{"\u20B9"}{billing.subtotal}</span>
               </div>
               {billing.discount > 0 && (
                 <div className="flex justify-between text-green-400">
                   <span>Discount</span>
-                  <span>âˆ’â‚¹{billing.discount}</span>
+                  <span>-{"\u20B9"}{billing.discount}</span>
                 </div>
               )}
               <div className="flex justify-between text-theme-muted">
                 <span>GST (18%)</span>
-                <span>â‚¹{billing.gst}</span>
+                <span>{"\u20B9"}{billing.gst}</span>
               </div>
               <div className="flex justify-between text-theme-muted">
                 <span>Delivery</span>
-                <span className={billing.shipping === 0 ? 'text-green-400 font-semibold' : ''}>{billing.shipping === 0 ? 'FREE' : `â‚¹${billing.shipping}`}</span>
+                <span className={billing.shipping === 0 ? 'text-green-400 font-semibold' : ''}>{billing.shipping === 0 ? 'FREE' : `\u20B9${billing.shipping}`}</span>
               </div>
               {paymentMethod === 'cod' && step >= 2 && (
                 <div className="flex justify-between text-amber-400">
                   <span>COD Charges</span>
-                  <span>â‚¹40</span>
+                  <span>{"\u20B9"}40</span>
                 </div>
               )}
               <div className="flex justify-between text-sm font-extrabold text-theme-text pt-2.5 border-t border-theme-border/30">
                 <span>Total Amount</span>
-                <span className="text-brand text-base">â‚¹{paymentMethod === 'cod' && step >= 2 ? codTotal.toFixed(2) : billing.total}</span>
+                <span className="text-brand text-base">{"\u20B9"}{paymentMethod === 'cod' && step >= 2 ? codTotal.toFixed(2) : billing.total}</span>
               </div>
               {billing.discount > 0 && (
                 <p className="text-[10px] text-green-400 font-semibold text-center bg-green-500/5 border border-green-500/10 rounded-lg py-1.5">
-                  ðŸŽ‰ You save â‚¹{billing.discount} on this order!
+                  🎉 You save {"\u20B9"}{billing.discount} on this order!
                 </p>
               )}
             </div>
